@@ -21,19 +21,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { init } from 'kontra';
-import { initializeGame, startGame } from './game';
 
-let { canvas, context } = init();
+import { Level } from './level';
 
-const resize = () => {
-  canvas.width = window.innerWidth - 10;
-  canvas.height = window.innerHeight - 10;
+export const renderTexts = (
+  context: CanvasRenderingContext2D,
+  ...texts: Array<string>
+) => {
+  const canvas = context.canvas;
+
+  context.fillStyle = 'white';
+  context.font = '22px Sans-serif';
+
+  for (let i = 0; i < texts.length; i++) {
+    const text = texts[i];
+    let textWidth = text.length * 14;
+    const x = canvas.width / 2 - textWidth / 2;
+    let y = canvas.height * 0.25 + i * 40;
+    context.fillText(text, x, y);
+  }
 };
 
-window.addEventListener('resize', resize, false);
-resize();
+const renderLevelNumber = (context: CanvasRenderingContext2D, level: Level) => {
+  const canvas = context.canvas;
 
-initializeGame(canvas, context);
+  context.fillStyle = 'white';
+  context.font = '20px Sans-serif';
 
-startGame();
+  context.fillText('LEVEL', canvas.width - 120, 35);
+  context.fillText('' + level.number, canvas.width - 40, 35);
+};
+
+export const renderUi = (context: CanvasRenderingContext2D, level: Level) => {
+  renderLevelNumber(context, level);
+};
