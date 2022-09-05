@@ -29,6 +29,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "kontra": "^8.0.0",
     "tslib": "^2.4.0"
   }
 }
