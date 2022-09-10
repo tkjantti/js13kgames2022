@@ -121,7 +121,7 @@ const listenKeys = () => {
 
   // Keys for debugging
   onKey('1', () => {
-    camera.follow(level.player!);
+    camera.follow(level.player);
   });
   onKey('2', () => {
     camera.zoomToLevel();
@@ -148,7 +148,7 @@ const startLevel = (number: number) => {
   if (number === 0) {
     gameLoop = createStartScreenLoop();
   } else {
-    camera.follow(level.player!);
+    camera.follow(level.player);
     gameLoop = createGameLoop();
   }
 

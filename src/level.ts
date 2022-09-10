@@ -38,7 +38,7 @@ export class Level {
 
   public isFinished = false;
 
-  public player: Player | undefined;
+  public player: Player = new Player(this);
 
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
@@ -55,7 +55,7 @@ export class Level {
       ladder.render();
     }
 
-    this.player!.render();
+    this.player.render();
 
     // Draw level borders for debugging
     if (!camera.target) {
@@ -143,7 +143,7 @@ export class Level {
   }
 
   update(camera: Camera) {
-    this.player!.customUpdate(this.ladders, this.platforms, camera);
+    this.player.customUpdate(this.ladders, this.platforms, camera);
   }
 
   isFailed() {

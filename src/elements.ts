@@ -37,17 +37,19 @@ const drawLadder = () => {
   canvas.width = ladderWidth;
   canvas.height = ladderHeight;
 
-  const cx = canvas.getContext('2d')!;
-  cx.save();
+  const cx = canvas.getContext('2d');
+  if (cx) {
+    cx.save();
 
-  for (let i = 0; i < stepCount; i++) {
-    cx.fillStyle = color2;
-    cx.fillRect(8, i * stepGap, ladderWidth - 16, stepGap / 2);
-    cx.fillStyle = color;
-    cx.fillRect(0, i * stepGap + stepGap / 2, ladderWidth, stepGap / 2);
+    for (let i = 0; i < stepCount; i++) {
+      cx.fillStyle = color2;
+      cx.fillRect(8, i * stepGap, ladderWidth - 16, stepGap / 2);
+      cx.fillStyle = color;
+      cx.fillRect(0, i * stepGap + stepGap / 2, ladderWidth, stepGap / 2);
+    }
+
+    cx.restore();
   }
-
-  cx.restore();
 
   return canvas;
 };
@@ -74,10 +76,10 @@ export class Platform extends GameObjectClass {
   }
 
   draw(): void {
-    const cx = this.context!;
+    const cx = this.context;
     cx.save();
-    cx.fillStyle = this.color!;
-    cx.fillRect(0, 0, this.width!, this.height!);
+    cx.fillStyle = this.color;
+    cx.fillRect(0, 0, this.width, this.height);
     cx.restore();
   }
 }

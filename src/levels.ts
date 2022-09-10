@@ -23,17 +23,15 @@
  */
 
 import { Level } from './level';
-import { Player } from './player';
 
 const createSimpleLevel = (level: Level) => {
   level.width = 2000;
   level.height = 1500;
 
-  level.createTower(1000, 3);
-
-  level.player = new Player(level);
   level.player.x = 100;
   level.player.y = level.height - level.player.height;
+
+  level.createTower(1000, 3);
 };
 
 const levelCreations = [null, createSimpleLevel];
