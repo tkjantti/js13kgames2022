@@ -27,9 +27,10 @@ import { Level } from './level';
 import { Camera } from './camera';
 import { Platform } from './elements';
 
-const PLAYER_SPEED = 7;
+const SPEED = 7;
+const SPEED_WHEN_CLIMBING = 1.5;
 const JUMP_VELOCITY = -15;
-const CLIMB_SPEED = 2;
+const CLIMB_SPEED = 4;
 const DEADLY_FALLING_SPEED = 40;
 
 const OFF_LEDGE_JUMP_DELAY_MS = 200;
@@ -219,14 +220,14 @@ export class Player extends GameObjectClass {
     let dy = 0;
 
     if ((keyPressed('arrowleft') || keyPressed('a')) && this.x > 0) {
-      dx = -PLAYER_SPEED;
+      dx = this.state === State.Climbing ? -SPEED_WHEN_CLIMBING : -SPEED;
       this.moveLeft = true;
       if (this.state !== State.Falling) this.moveLeftFoot++;
     } else if (
       (keyPressed('arrowright') || keyPressed('d')) &&
       this.x < this.level.width - this.width
     ) {
-      dx = PLAYER_SPEED;
+      dx = this.state === State.Climbing ? SPEED_WHEN_CLIMBING : SPEED;
       this.moveLeft = false;
       if (this.state !== State.Falling) this.moveLeftFoot++;
     }
