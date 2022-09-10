@@ -26,15 +26,14 @@ import { Ladder, Platform } from './elements';
 import { Camera } from './camera';
 import { Sprite } from 'kontra';
 import { Player } from './player';
-import { random } from './utils';
 
 export class Level {
   public number = 0;
 
   public left = 0;
   public top = 0;
-  public width = 4000;
-  public height = 4000;
+  public width = 2400;
+  public height = 2300;
 
   public isFinished = false;
 
@@ -42,6 +41,16 @@ export class Level {
 
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
+
+  constructor(number: number) {
+    this.number = number;
+    if (number >= 1) {
+      this.fill();
+
+      this.player.x = 100;
+      this.player.y = this.height - this.player.height;
+    }
+  }
 
   render(context: CanvasRenderingContext2D, camera: Camera): void {
     this.renderBackground(context);
@@ -80,54 +89,42 @@ export class Level {
     context.restore();
   }
 
-  addLadder(platform: Platform): void {
-    const ladder = new Ladder();
-    ladder.x = platform.x + 20;
-    ladder.y = platform.y;
-    this.ladders.push(ladder);
-  }
+  private fill(): void {
+    const roomWidth = 400;
+    const roomHeight = 300;
 
-  createTower(x: number, floorCount: number): void {
-    const floorWidth = 800;
-    const floorHeight = 300;
+    const roomCountX = this.width / roomWidth;
+    const roomCountY = this.height / roomHeight;
 
-    let isHoleOnPreviousLayer = false;
+    const halfWidth = ((roomCountX - 1) * roomWidth) / 2;
 
-    for (let i = 0; i < floorCount; i++) {
-      const floorTop = this.height - (i + 1) * floorHeight;
-      const floorLeft = x - floorWidth / 2;
-      const floorRight = floorLeft + floorWidth;
+    for (let yi = 1; yi < roomCountY; yi++) {
+      const y = this.height - yi * roomHeight;
 
-      // No two consecutive platforms with holes in them.
-      if (isHoleOnPreviousLayer || random() < 0.8) {
-        // One solid platform
-        const platform = new Platform();
-        platform.width = floorWidth;
-        platform.x = floorLeft;
-        platform.y = floorTop;
-        this.platforms.push(platform);
+      const left = new Platform();
+      left.width = halfWidth;
+      left.x = 0;
+      left.y = y;
+      this.platforms.push(left);
 
-        this.addLadder(platform);
+      const right = new Platform();
+      right.width = halfWidth;
+      right.x = this.width - halfWidth;
+      right.y = y;
+      this.platforms.push(right);
 
-        isHoleOnPreviousLayer = false;
-      } else {
-        // Two platforms and a hole between them.
-        const lessWidth = floorWidth / 3;
+      for (let xi = 0; xi < 3; xi++) {
+        const ladder = new Ladder();
+        ladder.x = xi * roomWidth + 10;
+        ladder.y = left.y;
+        this.ladders.push(ladder);
+      }
 
-        const p1 = new Platform();
-        p1.width = lessWidth;
-        p1.x = floorLeft;
-        p1.y = floorTop;
-        this.platforms.push(p1);
-        this.addLadder(p1);
-
-        const p2 = new Platform();
-        p2.width = lessWidth;
-        p2.x = floorRight - lessWidth;
-        p2.y = floorTop;
-        this.platforms.push(p2);
-
-        isHoleOnPreviousLayer = true;
+      for (let xi = 4; xi < roomCountX; xi++) {
+        const ladder = new Ladder();
+        ladder.x = xi * roomWidth + 10;
+        ladder.y = left.y;
+        this.ladders.push(ladder);
       }
     }
   }

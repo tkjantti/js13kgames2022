@@ -26,7 +26,8 @@ import { GameLoop, onKey, initKeys } from 'kontra';
 import { renderTexts, renderUi } from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
-import { createLevel, maxLevel } from './levels';
+
+const maxLevel = 1;
 
 enum State {
   Loading,
@@ -142,7 +143,7 @@ const startLevel = (number: number): void => {
   gameLoop.stop();
   gameFinished = false;
 
-  level = createLevel(number);
+  level = new Level(number);
   camera = new Camera(level, canvas);
 
   if (number === 0) {
@@ -185,7 +186,7 @@ export const initializeGame = (
   state = State.Loading;
 
   initKeys();
-  level = new Level();
+  level = new Level(0);
   camera = new Camera(level, canvas);
 
   levelNumber = 0;
