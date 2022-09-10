@@ -35,9 +35,9 @@ export const renderTexts = (
 
   for (let i = 0; i < texts.length; i++) {
     const text = texts[i];
-    let textWidth = text.length * 14;
+    const textWidth = text.length * 14;
     const x = canvas.width / 2 - textWidth / 2;
-    let y = canvas.height * 0.25 + i * 40;
+    const y = canvas.height * 0.25 + i * 40;
     context.fillText(text, x, y);
   }
 };

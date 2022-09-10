@@ -36,14 +36,18 @@ const createSimpleLevel = (level: Level) => {
   level.player.y = level.height - level.player.height;
 };
 
-const levelCreations = [() => {}, createSimpleLevel];
+const levelCreations = [null, createSimpleLevel];
 
 export const maxLevel = levelCreations.length - 1;
 
 export const createLevel = (level: Level, n: number) => {
   level.clear();
 
-  const createFunction = levelCreations[n];
-  createFunction(level);
+  const create = levelCreations[n];
+
+  if (create) {
+    create(level);
+  }
+
   level.number = n;
 };

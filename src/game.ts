@@ -47,8 +47,6 @@ let camera: Camera;
 
 const createStartScreenLoop = () => {
   return GameLoop({
-    update() {},
-
     render() {
       context.clearRect(0, 0, canvas.width, canvas.height);
 

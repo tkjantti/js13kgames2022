@@ -24,7 +24,7 @@
 import { init } from 'kontra';
 import { initializeGame, startGame } from './game';
 
-let { canvas, context } = init();
+const { canvas, context } = init();
 
 const resize = () => {
   canvas.width = window.innerWidth - 10;

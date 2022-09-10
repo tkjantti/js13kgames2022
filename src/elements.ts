@@ -37,7 +37,7 @@ const drawLadder = () => {
   canvas.width = ladderWidth;
   canvas.height = ladderHeight;
 
-  let cx = canvas.getContext('2d')!;
+  const cx = canvas.getContext('2d')!;
   cx.save();
 
   for (let i = 0; i < stepCount; i++) {

@@ -27,12 +27,12 @@ import { Level } from './level';
 import { random } from './utils';
 
 export class Camera {
-  public x: number = 0;
-  public y: number = 0;
-  public zoom: number = 1;
+  public x = 0;
+  public y = 0;
+  public zoom = 1;
 
-  private shakePower: number = 0;
-  private shakeDecay: number = 0;
+  private shakePower = 0;
+  private shakeDecay = 0;
 
   public target: GameObject | null = null;
 

@@ -56,16 +56,16 @@ const playerImageWidth = 30;
 const playerImageHeight = 90;
 
 export class Player extends GameObjectClass {
-  private xVel: number = 0; // Horizontal velocity
-  private yVel: number = 0; // Vertical velocity, affected by jumping and gravity
+  private xVel = 0; // Horizontal velocity
+  private yVel = 0; // Vertical velocity, affected by jumping and gravity
 
-  private latestOnPlatformTime: number = 0;
+  private latestOnPlatformTime = 0;
   private state: State = State.OnPlatform;
-  private fallingToGround: boolean = false;
-  private stopClimbing: boolean = false;
-  private moveLeft: boolean = false;
-  private moveLeftFoot: number = 0;
-  private walkingSpeed: number = 5;
+  private fallingToGround = false;
+  private stopClimbing = false;
+  private moveLeft = false;
+  private moveLeftFoot = 0;
+  private walkingSpeed = 5;
 
   constructor(private level: Level) {
     super({
@@ -123,11 +123,11 @@ export class Player extends GameObjectClass {
   }
 
   private findLadderCollision(ladders: Array<Sprite>): LadderCollision {
-    let collision: boolean = false,
-      collidesHigh: boolean = false;
+    let collision = false,
+      collidesHigh = false;
 
     for (let i = 0; i < ladders.length; i++) {
-      let ladder = ladders[i];
+      const ladder = ladders[i];
 
       if (collides(ladder, this)) {
         collision = true;
@@ -166,7 +166,7 @@ export class Player extends GameObjectClass {
 
     let movement = { dx: 0, dy: 0 };
 
-    let ladderCollision = this.findLadderCollision(ladders);
+    const ladderCollision = this.findLadderCollision(ladders);
 
     if (!ladderCollision.collision && this.state === State.Climbing) {
       this.state = State.Falling;
@@ -208,7 +208,7 @@ export class Player extends GameObjectClass {
   }
 
   private turnHorizontally() {
-    let oldWidth = this.width,
+    const oldWidth = this.width,
       oldHeight = this.height;
     this.width = oldHeight;
     this.height = oldWidth;
@@ -330,7 +330,7 @@ export class Player extends GameObjectClass {
 
   private findPlatform(platforms: Array<Platform>): Platform | undefined {
     for (let i = 0; i < platforms.length; i++) {
-      let platform = platforms[i];
+      const platform = platforms[i];
       if (collides(this, platform)) {
         if (this.y + this.height < platform.y + platform.height) {
           return platform;

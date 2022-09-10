@@ -31,10 +31,10 @@ import { random } from './utils';
 export class Level {
   public number = 0;
 
-  public left: number = 0;
-  public top: number = 0;
-  public width: number = 4000;
-  public height: number = 4000;
+  public left = 0;
+  public top = 0;
+  public width = 4000;
+  public height = 4000;
 
   public isFinished = false;
 
@@ -62,7 +62,7 @@ export class Level {
     }
 
     for (let i = 0; i < this.ladders.length; i++) {
-      let ladder = this.ladders[i];
+      const ladder = this.ladders[i];
       ladder.render();
     }
 
@@ -92,7 +92,7 @@ export class Level {
   }
 
   addLadder(platform: Platform) {
-    let ladder = new Ladder();
+    const ladder = new Ladder();
     ladder.x = platform.x + 20;
     ladder.y = platform.y;
     this.ladders.push(ladder);
@@ -112,7 +112,7 @@ export class Level {
       // No two consecutive platforms with holes in them.
       if (isHoleOnPreviousLayer || random() < 0.8) {
         // One solid platform
-        let platform = new Platform();
+        const platform = new Platform();
         platform.width = floorWidth;
         platform.x = floorLeft;
         platform.y = floorTop;
@@ -125,14 +125,14 @@ export class Level {
         // Two platforms and a hole between them.
         const lessWidth = floorWidth / 3;
 
-        let p1 = new Platform();
+        const p1 = new Platform();
         p1.width = lessWidth;
         p1.x = floorLeft;
         p1.y = floorTop;
         this.platforms.push(p1);
         this.addLadder(p1);
 
-        let p2 = new Platform();
+        const p2 = new Platform();
         p2.width = lessWidth;
         p2.x = floorRight - lessWidth;
         p2.y = floorTop;
