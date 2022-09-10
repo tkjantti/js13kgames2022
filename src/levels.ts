@@ -21,19 +21,33 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { init } from 'kontra';
-import { initializeGame, startGame } from './game';
 
-const { canvas, context } = init();
+import { Level } from './level';
 
-const resize = () => {
-  canvas.width = window.innerWidth - 10;
-  canvas.height = window.innerHeight - 10;
+const createSimpleLevel = (level: Level) => {
+  level.width = 2000;
+  level.height = 1500;
+
+  level.player.x = 100;
+  level.player.y = level.height - level.player.height;
+
+  level.createTower(1000, 3);
 };
 
-window.addEventListener('resize', resize, false);
-resize();
+const levelCreations = [null, createSimpleLevel];
 
-initializeGame(canvas, context);
+export const maxLevel = levelCreations.length - 1;
 
-startGame();
+export const createLevel = (n: number): Level => {
+  const level = new Level();
+
+  const create = levelCreations[n];
+
+  if (create) {
+    create(level);
+  }
+
+  level.number = n;
+
+  return level;
+};

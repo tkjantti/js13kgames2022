@@ -21,19 +21,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { init } from 'kontra';
-import { initializeGame, startGame } from './game';
 
-const { canvas, context } = init();
+export interface Point {
+  x: number;
+  y: number;
+}
 
-const resize = () => {
-  canvas.width = window.innerWidth - 10;
-  canvas.height = window.innerHeight - 10;
+/*
+ * Returns a random number between 0 and max.
+ */
+export const random = (max = 1) => {
+  return Math.random() * max;
 };
 
-window.addEventListener('resize', resize, false);
-resize();
-
-initializeGame(canvas, context);
-
-startGame();
+/*
+ * Returns distance between two points.
+ */
+export const getDistance = (a: Point, b: Point) => {
+  const xDiff = a.x - b.x;
+  const yDiff = a.y - b.y;
+  return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+};
