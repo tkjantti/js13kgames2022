@@ -40,6 +40,11 @@ const GRAVITY = 1;
 const STANDING_WIDTH = 30;
 const STANDING_HEIGHT = 90;
 
+interface LadderCollision {
+  collision: boolean;
+  collidesHigh: boolean;
+}
+
 enum State {
   OnPlatform,
   Falling,
@@ -117,9 +122,7 @@ export class Player extends GameObjectClass {
     context.restore();
   }
 
-  private findLadderCollision(
-    ladders: Array<Sprite>,
-  ): { collision: boolean; collidesHigh: boolean } {
+  private findLadderCollision(ladders: Array<Sprite>): LadderCollision {
     let collision: boolean = false,
       collidesHigh: boolean = false;
 
@@ -213,7 +216,7 @@ export class Player extends GameObjectClass {
 
   private handleControls(
     now: number,
-    ladderCollision: { collision: boolean; collidesHigh: boolean },
+    ladderCollision: LadderCollision,
     platform: Platform | undefined,
   ) {
     let dx = 0;
