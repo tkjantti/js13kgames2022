@@ -40,8 +40,8 @@ const levelCreations = [null, createSimpleLevel];
 
 export const maxLevel = levelCreations.length - 1;
 
-export const createLevel = (level: Level, n: number) => {
-  level.clear();
+export const createLevel = (n: number): Level => {
+  const level = new Level();
 
   const create = levelCreations[n];
 
@@ -50,4 +50,6 @@ export const createLevel = (level: Level, n: number) => {
   }
 
   level.number = n;
+
+  return level;
 };

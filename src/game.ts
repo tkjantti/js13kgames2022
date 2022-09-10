@@ -142,7 +142,8 @@ const startLevel = (number: number) => {
   gameLoop.stop();
   gameFinished = false;
 
-  createLevel(level, number);
+  level = createLevel(number);
+  camera = new Camera(level, canvas);
 
   if (number === 0) {
     gameLoop = createStartScreenLoop();

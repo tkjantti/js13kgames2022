@@ -43,17 +43,6 @@ export class Level {
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
 
-  constructor() {
-    this.clear();
-  }
-
-  clear() {
-    this.isFinished = false;
-    this.ladders = [];
-    this.platforms = [];
-    this.player = undefined;
-  }
-
   render(context: CanvasRenderingContext2D, camera: Camera) {
     this.renderBackground(context);
 
