@@ -74,12 +74,12 @@ export class Player extends GameObjectClass {
     });
   }
 
-  isOnGround() {
+  isOnGround(): boolean {
     const margin = 5;
     return this.y + this.height > this.level.height - margin;
   }
 
-  isDead() {
+  isDead(): boolean {
     return this.state === State.Dead;
   }
 
@@ -142,7 +142,7 @@ export class Player extends GameObjectClass {
     return { collision, collidesHigh };
   }
 
-  hit(velocity: number) {
+  hit(velocity: number): void {
     if (Math.abs(this.xVel) < 100) {
       this.xVel += velocity;
     }
@@ -199,7 +199,7 @@ export class Player extends GameObjectClass {
     this.updateVerticalPosition(camera, platform, dy);
   }
 
-  private screenShake(camera: Camera) {
+  private screenShake(camera: Camera): void {
     const topVel = 80;
     const maxPower = 20;
     const scaledPower =
@@ -207,7 +207,7 @@ export class Player extends GameObjectClass {
     camera.shake(scaledPower, 0.5);
   }
 
-  private turnHorizontally() {
+  private turnHorizontally(): void {
     const oldWidth = this.width,
       oldHeight = this.height;
     this.width = oldHeight;
@@ -218,7 +218,7 @@ export class Player extends GameObjectClass {
     now: number,
     ladderCollision: LadderCollision,
     platform: Platform | undefined,
-  ) {
+  ): { dx: number; dy: number } {
     let dx = 0;
     let dy = 0;
 
@@ -281,7 +281,7 @@ export class Player extends GameObjectClass {
     return { dx, dy };
   }
 
-  private updateHorizontalPosition(dx: number) {
+  private updateHorizontalPosition(dx: number): void {
     if (this.x + dx > this.level.width - this.width) {
       this.x = this.level.width - this.width;
       this.xVel = 0;
@@ -297,7 +297,7 @@ export class Player extends GameObjectClass {
     camera: Camera,
     platform: Platform | undefined,
     dy: number,
-  ) {
+  ): void {
     if (this.y + dy > this.level.height - this.height) {
       // hits ground
       this.y = this.level.height - this.height;

@@ -27,7 +27,7 @@ import { Level } from './level';
 export const renderTexts = (
   context: CanvasRenderingContext2D,
   ...texts: Array<string>
-) => {
+): void => {
   const canvas = context.canvas;
 
   context.fillStyle = 'white';
@@ -42,7 +42,10 @@ export const renderTexts = (
   }
 };
 
-const renderLevelNumber = (context: CanvasRenderingContext2D, level: Level) => {
+const renderLevelNumber = (
+  context: CanvasRenderingContext2D,
+  level: Level,
+): void => {
   const canvas = context.canvas;
 
   context.fillStyle = 'white';
@@ -52,6 +55,9 @@ const renderLevelNumber = (context: CanvasRenderingContext2D, level: Level) => {
   context.fillText('' + level.number, canvas.width - 40, 35);
 };
 
-export const renderUi = (context: CanvasRenderingContext2D, level: Level) => {
+export const renderUi = (
+  context: CanvasRenderingContext2D,
+  level: Level,
+): void => {
   renderLevelNumber(context, level);
 };

@@ -24,7 +24,7 @@
 
 import { Level } from './level';
 
-const createSimpleLevel = (level: Level) => {
+const createSimpleLevel = (level: Level): void => {
   level.width = 2000;
   level.height = 1500;
 

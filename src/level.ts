@@ -43,7 +43,7 @@ export class Level {
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
 
-  render(context: CanvasRenderingContext2D, camera: Camera) {
+  render(context: CanvasRenderingContext2D, camera: Camera): void {
     this.renderBackground(context);
 
     for (let i = 0; i < this.platforms.length; i++) {
@@ -73,21 +73,21 @@ export class Level {
     }
   }
 
-  renderBackground(context: CanvasRenderingContext2D) {
+  renderBackground(context: CanvasRenderingContext2D): void {
     context.save();
     context.fillStyle = 'black';
     context.fillRect(0, 0, this.width, this.height);
     context.restore();
   }
 
-  addLadder(platform: Platform) {
+  addLadder(platform: Platform): void {
     const ladder = new Ladder();
     ladder.x = platform.x + 20;
     ladder.y = platform.y;
     this.ladders.push(ladder);
   }
 
-  createTower(x: number, floorCount: number) {
+  createTower(x: number, floorCount: number): void {
     const floorWidth = 800;
     const floorHeight = 300;
 
@@ -130,23 +130,13 @@ export class Level {
         isHoleOnPreviousLayer = true;
       }
     }
-
-    return {
-      x,
-      width: floorWidth,
-      height: floorCount * floorHeight,
-      top: this.height - floorCount * floorHeight,
-      bottom: this.height,
-      left: x - floorWidth / 2,
-      right: x + floorWidth / 2,
-    };
   }
 
-  update(camera: Camera) {
+  update(camera: Camera): void {
     this.player.customUpdate(this.ladders, this.platforms, camera);
   }
 
-  isFailed() {
+  isFailed(): boolean {
     return this.player && this.player.isDead();
   }
 }
