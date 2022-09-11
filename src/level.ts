@@ -29,6 +29,9 @@ import { Player } from './player';
 import { Enemy } from './enemy';
 import { random, randomMinMax } from './utils';
 import { Area } from './area';
+import { Ghost } from './ghost';
+
+const TIME_AS_GHOST = 5000;
 
 export class Level implements Area {
   public number = 0;
@@ -43,20 +46,47 @@ export class Level implements Area {
 
   public isFinished = false;
 
+  public camera: Camera | undefined;
+
   public player: Player = new Player(this);
 
-  public enemies: Array<Enemy> = [];
+  private ghost: Ghost | undefined;
+
+  private enemies: Array<Enemy> = [];
 
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
 
+  getTimeAsGhost(): number | undefined {
+    if (!this.ghost) {
+      return undefined;
+    }
+
+    return (
+      Math.floor(
+        (TIME_AS_GHOST - (performance.now() - this.ghost.startTime)) / 1000,
+      ) + 1
+    );
+  }
+
   constructor(number: number) {
     this.number = number;
+
     if (number >= 1) {
       this.fill();
 
       this.player.x = 100;
       this.player.y = this.height - this.player.height;
+
+      this.player.died = () => {
+        const ghost = new Ghost(this);
+        ghost.x = this.player.x;
+        ghost.y = this.player.y;
+        this.ghost = ghost;
+        if (this.camera) {
+          this.camera.follow(this.ghost);
+        }
+      };
     }
   }
 
@@ -78,6 +108,10 @@ export class Level implements Area {
     }
 
     this.player.render();
+
+    if (this.ghost) {
+      this.ghost.render();
+    }
 
     // Draw level borders for debugging
     if (!camera.target) {
@@ -170,12 +204,28 @@ export class Level implements Area {
   }
 
   update(camera: Camera): void {
+    const now = performance.now();
+
     for (let i = 0; i < this.enemies.length; i++) {
       const enemy = this.enemies[i];
       enemy.update();
     }
 
     this.player.customUpdate(this.ladders, this.platforms, camera);
+
+    if (this.ghost) {
+      this.ghost.update();
+
+      if (now - this.ghost.startTime > TIME_AS_GHOST) {
+        this.player.x = this.ghost.x;
+        this.player.y = this.ghost.y;
+        this.player.resurrect();
+
+        this.ghost = undefined;
+
+        camera.follow(this.player);
+      }
+    }
 
     if (!this.player.isDead()) {
       for (let i = 0; i < this.enemies.length; i++) {
@@ -185,9 +235,5 @@ export class Level implements Area {
         }
       }
     }
-  }
-
-  isFailed(): boolean {
-    return this.player && this.player.isDead();
   }
 }

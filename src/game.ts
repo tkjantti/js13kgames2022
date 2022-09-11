@@ -23,7 +23,7 @@
  */
 
 import { GameLoop, onKey, initKeys } from 'kontra';
-import { renderTexts, renderUi } from './ui';
+import { renderBigNumber, renderTexts } from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
 
@@ -39,7 +39,6 @@ let canvas: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
 
 let levelNumber = 0;
-let gameFinished = false;
 let state = State.Loading;
 
 let gameLoop: GameLoop;
@@ -85,33 +84,20 @@ const createGameLoop = (): GameLoop => {
 
       context.restore();
 
-      renderUi(context, level);
-      renderHelpTexts(context);
+      const timeLeft = level.getTimeAsGhost();
+
+      if (timeLeft != null) {
+        renderTexts(context, 'Continue as ghost for a while!');
+        renderBigNumber(context, timeLeft);
+      }
     },
   });
-};
-
-const renderHelpTexts = (context: CanvasRenderingContext2D): void => {
-  if (level.isFailed()) {
-    renderTexts(context, 'Press ENTER to try again');
-  } else if (gameFinished) {
-    renderTexts(
-      context,
-      'CONGRATULATIONS!       ',
-      'YOU ARE ON YOUR WAY TO BACK HOME!      ',
-      '(Press ESC to continue)',
-    );
-    levelNumber = 1;
-  }
 };
 
 const listenKeys = (): void => {
   onKey('enter', () => {
     if (levelNumber === 0) {
       levelNumber = 1;
-      startLevel(levelNumber);
-    } else if (level.isFailed()) {
-      // playTune('main');
       startLevel(levelNumber);
     }
   });
@@ -135,28 +121,23 @@ const listenKeys = (): void => {
 };
 
 const startLevel = (number: number): void => {
-  if (number > maxLevel) {
-    gameFinished = true;
-    return;
-  }
+  // if (number > maxLevel) {
+  //   gameFinished = true;
+  //   return;
+  // }
 
   gameLoop.stop();
-  gameFinished = false;
+  // gameFinished = false;
 
   level = new Level(number);
   camera = new Camera(level, canvas);
+  level.camera = camera;
 
   if (number === 0) {
     gameLoop = createStartScreenLoop();
   } else {
     camera.follow(level.player);
     gameLoop = createGameLoop();
-  }
-
-  if (number === 1) {
-    // Music starts at the first actual level
-    // and continues from level to level.
-    // playTune('main');
   }
 
   state = State.Running;

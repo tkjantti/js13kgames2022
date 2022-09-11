@@ -35,29 +35,21 @@ export const renderTexts = (
 
   for (let i = 0; i < texts.length; i++) {
     const text = texts[i];
-    const textWidth = text.length * 14;
+    const textWidth = text.length * 13;
     const x = canvas.width / 2 - textWidth / 2;
     const y = canvas.height * 0.25 + i * 40;
     context.fillText(text, x, y);
   }
 };
 
-const renderLevelNumber = (
+export const renderBigNumber = (
   context: CanvasRenderingContext2D,
-  level: Level,
+  number: number,
 ): void => {
   const canvas = context.canvas;
 
   context.fillStyle = 'white';
-  context.font = '20px Sans-serif';
+  context.font = '50px Sans-serif';
 
-  context.fillText('LEVEL', canvas.width - 120, 35);
-  context.fillText('' + level.number, canvas.width - 40, 35);
-};
-
-export const renderUi = (
-  context: CanvasRenderingContext2D,
-  level: Level,
-): void => {
-  renderLevelNumber(context, level);
+  context.fillText('' + number, canvas.width / 2, (canvas.height * 1) / 3);
 };
