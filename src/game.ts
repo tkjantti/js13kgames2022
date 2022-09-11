@@ -145,6 +145,7 @@ const startLevel = (number: number): void => {
 
   level = new Level(number);
   camera = new Camera(level, canvas);
+  level.camera = camera;
 
   if (number === 0) {
     gameLoop = createStartScreenLoop();

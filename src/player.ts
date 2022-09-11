@@ -67,6 +67,9 @@ export class Player extends GameObjectClass {
   private moveLeftFoot = 0;
   private walkingSpeed = 5;
 
+  // eslint-disable-next-line
+  public died: () => void = () => {};
+
   constructor(private level: Level) {
     super({
       width: STANDING_WIDTH,
@@ -84,7 +87,10 @@ export class Player extends GameObjectClass {
   }
 
   die(): void {
-    this.state = State.Dead;
+    if (this.state !== State.Dead) {
+      this.state = State.Dead;
+      this.died();
+    }
   }
 
   draw(): void {
@@ -121,6 +127,7 @@ export class Player extends GameObjectClass {
       STANDING_HEIGHT / playerImageHeight,
     );
     // context.drawImage(this.image, 0, 0);
+    context.fillStyle = 'green';
     context.fillRect(0, 0, playerImageWidth, playerImageHeight);
 
     context.restore();
@@ -308,7 +315,7 @@ export class Player extends GameObjectClass {
 
       if (this.fallingToGround) {
         this.screenShake(camera);
-        this.state = State.Dead;
+        this.die();
       } else {
         this.state = State.OnPlatform;
       }

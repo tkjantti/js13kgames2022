@@ -29,6 +29,7 @@ import { Player } from './player';
 import { Enemy } from './enemy';
 import { random, randomMinMax } from './utils';
 import { Area } from './area';
+import { Ghost } from './ghost';
 
 export class Level implements Area {
   public number = 0;
@@ -43,20 +44,35 @@ export class Level implements Area {
 
   public isFinished = false;
 
+  public camera: Camera | undefined;
+
   public player: Player = new Player(this);
 
-  public enemies: Array<Enemy> = [];
+  private ghost: Ghost | undefined;
+
+  private enemies: Array<Enemy> = [];
 
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
 
   constructor(number: number) {
     this.number = number;
+
     if (number >= 1) {
       this.fill();
 
       this.player.x = 100;
       this.player.y = this.height - this.player.height;
+
+      this.player.died = () => {
+        const ghost = new Ghost(this);
+        ghost.x = this.player.x;
+        ghost.y = this.player.y;
+        this.ghost = ghost;
+        if (this.camera) {
+          this.camera.follow(this.ghost);
+        }
+      };
     }
   }
 
@@ -78,6 +94,10 @@ export class Level implements Area {
     }
 
     this.player.render();
+
+    if (this.ghost) {
+      this.ghost.render();
+    }
 
     // Draw level borders for debugging
     if (!camera.target) {
@@ -176,6 +196,10 @@ export class Level implements Area {
     }
 
     this.player.customUpdate(this.ladders, this.platforms, camera);
+
+    if (this.ghost) {
+      this.ghost.update();
+    }
 
     if (!this.player.isDead()) {
       for (let i = 0; i < this.enemies.length; i++) {
