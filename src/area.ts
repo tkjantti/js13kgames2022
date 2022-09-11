@@ -22,14 +22,9 @@
  * SOFTWARE.
  */
 
-export interface Point {
+export interface Area {
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
-
-/*
- * Returns a random number between 0 and max.
- */
-export const random = (max = 1): number => {
-  return Math.random() * max;
-};

@@ -24,13 +24,17 @@
 
 import { Ladder, Platform } from './elements';
 import { Camera } from './camera';
-import { collides, Sprite, Vector } from 'kontra';
+import { Sprite, Vector } from 'kontra';
 import { Player } from './player';
 import { Enemy } from './enemy';
 import { random } from './utils';
+import { Area } from './area';
 
-export class Level {
+export class Level implements Area {
   public number = 0;
+
+  public x = 0;
+  public y = 0;
 
   public left = 0;
   public top = 0;
@@ -136,7 +140,14 @@ export class Level {
         this.ladders.push(ladder);
       }
 
-      const enemy = new Enemy(this);
+      const patrolingArea: Area = {
+        x: 0,
+        y: y - roomHeight,
+        width: this.width,
+        height: roomHeight,
+      };
+
+      const enemy = new Enemy(patrolingArea, this.player);
       enemy.x = random(this.width);
       enemy.y = y - roomHeight / 2;
 

@@ -23,8 +23,8 @@
  */
 
 import { GameObjectClass, Vector } from 'kontra';
-import { Level } from './level';
-import { getDistance } from './utils';
+import { Area } from './area';
+import { Player } from './player';
 
 const SPEED = 10;
 
@@ -42,7 +42,7 @@ export class Enemy extends GameObjectClass {
 
   alarmed: (target: Vector) => void = () => {};
 
-  constructor(private level: Level) {
+  constructor(private area: Area, private player: Player) {
     super({
       width: 30,
       height: 30,
@@ -65,8 +65,8 @@ export class Enemy extends GameObjectClass {
         break;
       case 'patrol':
         this.patrol();
-        const player = this.level.player;
-        if (getDistance(this.position, player.position) < 200) {
+        const player = this.player;
+        if (!player.isDead() && this.position.distance(player.position) < 200) {
           this.state = { type: 'alarm', start: now };
           this.dx = 0;
           this.dy = 0;
@@ -108,11 +108,23 @@ export class Enemy extends GameObjectClass {
   }
 
   private patrol(): void {
+    const y = this.area.y + this.area.height / 2;
+    if (this.y < y - 10) {
+      this.dy = SPEED;
+    } else if (y + 10 < this.y) {
+      this.dy = -SPEED;
+    } else if (this.dy !== 0) {
+      this.dy = 0;
+    }
+
     if (this.dx === 0) {
       this.dx = SPEED;
-    } else if (this.dx < 0 && this.x <= 2 * this.width) {
+    } else if (this.dx < 0 && this.x <= this.area.x + 2 * this.width) {
       this.dx *= -1;
-    } else if (this.dx > 0 && this.level.width - 2 * this.width <= this.x) {
+    } else if (
+      this.dx > 0 &&
+      this.area.x + this.area.width - 2 * this.width <= this.x
+    ) {
       this.dx *= -1;
     }
   }
