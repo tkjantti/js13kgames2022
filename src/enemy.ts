@@ -22,13 +22,16 @@
  * SOFTWARE.
  */
 
-import { GameObjectClass } from 'kontra';
+import { GameObjectClass, Vector } from 'kontra';
 import { Level } from './level';
 import { getDistance } from './utils';
 
 const SPEED = 10;
 
-type State = { type: 'patrol' } | { type: 'alarm'; start: number };
+type State =
+  | { type: 'patrol' }
+  | { type: 'alarm'; start: number }
+  | { type: 'goto'; target: Vector };
 
 function getFlashingColor(now: number): string {
   return Math.floor(now / 500) % 2 === 0 ? 'red' : 'white';
@@ -36,6 +39,8 @@ function getFlashingColor(now: number): string {
 
 export class Enemy extends GameObjectClass {
   private state: State = { type: 'patrol' };
+
+  alarmed: (target: Vector) => void = () => {};
 
   constructor(private level: Level) {
     super({
@@ -45,22 +50,39 @@ export class Enemy extends GameObjectClass {
     });
   }
 
+  goTo(point: Vector): void {
+    this.state = { type: 'goto', target: point };
+  }
+
   update(): void {
     const now = performance.now();
 
-    if (this.state.type === 'alarm' && now - this.state.start > 2000) {
-      this.state = { type: 'patrol' };
-    } else if (getDistance(this.position, this.level.player.position) < 200) {
-      this.state = { type: 'alarm', start: now };
-      this.dx = 0;
-    } else if (this.state.type === 'patrol') {
-      if (this.dx === 0) {
-        this.dx = SPEED;
-      } else if (this.dx < 0 && this.x <= 2 * this.width) {
-        this.dx *= -1;
-      } else if (this.dx > 0 && this.level.width - 2 * this.width <= this.x) {
-        this.dx *= -1;
-      }
+    switch (this.state.type) {
+      case 'alarm':
+        if (now - this.state.start > 2000) {
+          this.state = { type: 'patrol' };
+        }
+        break;
+      case 'patrol':
+        this.patrol();
+        const player = this.level.player;
+        if (getDistance(this.position, player.position) < 200) {
+          this.state = { type: 'alarm', start: now };
+          this.dx = 0;
+          this.dy = 0;
+          this.alarmed(player.position);
+        }
+        break;
+      case 'goto':
+        const target = this.state.target;
+        if (this.position.distance(target) > 200) {
+          this.moveTowards(target);
+        } else {
+          this.state = { type: 'patrol' };
+          this.dx = 0;
+          this.dy = 0;
+        }
+        break;
     }
 
     this.advance();
@@ -83,5 +105,21 @@ export class Enemy extends GameObjectClass {
     context.fillRect(0, 0, this.width, this.height);
 
     context.restore();
+  }
+
+  private patrol(): void {
+    if (this.dx === 0) {
+      this.dx = SPEED;
+    } else if (this.dx < 0 && this.x <= 2 * this.width) {
+      this.dx *= -1;
+    } else if (this.dx > 0 && this.level.width - 2 * this.width <= this.x) {
+      this.dx *= -1;
+    }
+  }
+
+  private moveTowards(target: Vector): void {
+    const direction = target.subtract(this.position).normalize().scale(SPEED);
+    this.dx = direction.x;
+    this.dy = direction.y;
   }
 }

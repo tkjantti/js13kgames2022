@@ -24,7 +24,7 @@
 
 import { Ladder, Platform } from './elements';
 import { Camera } from './camera';
-import { collides, Sprite } from 'kontra';
+import { collides, Sprite, Vector } from 'kontra';
 import { Player } from './player';
 import { Enemy } from './enemy';
 import { random } from './utils';
@@ -139,6 +139,16 @@ export class Level {
       const enemy = new Enemy(this);
       enemy.x = random(this.width);
       enemy.y = y - roomHeight / 2;
+
+      const enemyIndex = this.enemies.length;
+      enemy.alarmed = (target: Vector) => {
+        for (let i = 0; i < this.enemies.length; i++) {
+          if (i !== enemyIndex) {
+            const other = this.enemies[i];
+            other.goTo(target);
+          }
+        }
+      };
       this.enemies.push(enemy);
     }
   }
