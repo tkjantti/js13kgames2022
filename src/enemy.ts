@@ -24,10 +24,19 @@
 
 import { GameObjectClass } from 'kontra';
 import { Level } from './level';
+import { getDistance } from './utils';
 
 const SPEED = 10;
 
+type State = { type: 'patrol' } | { type: 'alarm'; start: number };
+
+function getFlashingColor(now: number): string {
+  return Math.floor(now / 500) % 2 === 0 ? 'red' : 'white';
+}
+
 export class Enemy extends GameObjectClass {
+  private state: State = { type: 'patrol' };
+
   constructor(private level: Level) {
     super({
       width: 30,
@@ -37,20 +46,40 @@ export class Enemy extends GameObjectClass {
   }
 
   update(): void {
-    if (this.dx < 0 && this.x <= 2 * this.width) {
-      this.dx *= -1;
-    } else if (this.dx > 0 && this.level.width - 2 * this.width <= this.x) {
-      this.dx *= -1;
+    const now = performance.now();
+
+    if (this.state.type === 'alarm' && now - this.state.start > 2000) {
+      this.state = { type: 'patrol' };
+    } else if (getDistance(this.position, this.level.player.position) < 200) {
+      this.state = { type: 'alarm', start: now };
+      this.dx = 0;
+    } else if (this.state.type === 'patrol') {
+      if (this.dx === 0) {
+        this.dx = SPEED;
+      } else if (this.dx < 0 && this.x <= 2 * this.width) {
+        this.dx *= -1;
+      } else if (this.dx > 0 && this.level.width - 2 * this.width <= this.x) {
+        this.dx *= -1;
+      }
     }
 
     this.advance();
   }
 
   draw(): void {
+    const now = performance.now();
     const context = this.context;
     context.save();
 
-    context.fillStyle = 'red';
+    switch (this.state.type) {
+      case 'patrol':
+        context.fillStyle = 'white';
+        break;
+      case 'alarm':
+        context.fillStyle = getFlashingColor(now);
+        break;
+    }
+
     context.fillRect(0, 0, this.width, this.height);
 
     context.restore();
