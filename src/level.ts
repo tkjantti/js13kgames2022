@@ -44,6 +44,8 @@ export class Level implements Area {
   public width = 2400;
   public height = 2300;
 
+  public lives = 3;
+
   public isFinished = false;
 
   public camera: Camera | undefined;
@@ -69,6 +71,10 @@ export class Level implements Area {
     );
   }
 
+  isOver(): boolean {
+    return this.lives <= 0;
+  }
+
   constructor(number: number) {
     this.number = number;
 
@@ -79,12 +85,18 @@ export class Level implements Area {
       this.player.y = this.height - this.player.height;
 
       this.player.died = () => {
-        const ghost = new Ghost(this);
-        ghost.x = this.player.x;
-        ghost.y = this.player.y;
-        this.ghost = ghost;
-        if (this.camera) {
-          this.camera.follow(this.ghost);
+        this.lives--;
+
+        if (this.lives > 0) {
+          const ghost = new Ghost(this);
+          ghost.x = this.player.x;
+          ghost.y = this.player.y;
+          this.ghost = ghost;
+          if (this.camera) {
+            this.camera.follow(this.ghost);
+          }
+        } else {
+          this.ghost = undefined;
         }
       };
     }

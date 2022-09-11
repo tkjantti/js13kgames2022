@@ -42,6 +42,19 @@ export const renderTexts = (
   }
 };
 
+export const renderLives = (
+  context: CanvasRenderingContext2D,
+  lives: number,
+): void => {
+  const canvas = context.canvas;
+
+  context.fillStyle = 'white';
+  context.font = '20px Sans-serif';
+
+  context.fillText('LIVES', canvas.width - 120, 35);
+  context.fillText('' + lives, canvas.width - 40, 35);
+};
+
 export const renderBigNumber = (
   context: CanvasRenderingContext2D,
   number: number,

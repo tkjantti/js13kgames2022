@@ -23,7 +23,7 @@
  */
 
 import { GameLoop, onKey, initKeys } from 'kontra';
-import { renderBigNumber, renderTexts } from './ui';
+import { renderBigNumber, renderLives, renderTexts } from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
 
@@ -84,9 +84,13 @@ const createGameLoop = (): GameLoop => {
 
       context.restore();
 
+      renderLives(context, level.lives);
+
       const timeLeft = level.getTimeAsGhost();
 
-      if (timeLeft != null) {
+      if (level.isOver()) {
+        renderTexts(context, 'GAME OVER!', 'Press enter to try again');
+      } else if (timeLeft != null) {
         renderTexts(context, 'Continue as ghost for a while!');
         renderBigNumber(context, timeLeft);
       }
@@ -98,6 +102,9 @@ const listenKeys = (): void => {
   onKey('enter', () => {
     if (levelNumber === 0) {
       levelNumber = 1;
+      startLevel(levelNumber);
+    } else {
+      levelNumber = 0;
       startLevel(levelNumber);
     }
   });
@@ -121,13 +128,7 @@ const listenKeys = (): void => {
 };
 
 const startLevel = (number: number): void => {
-  // if (number > maxLevel) {
-  //   gameFinished = true;
-  //   return;
-  // }
-
   gameLoop.stop();
-  // gameFinished = false;
 
   level = new Level(number);
   camera = new Camera(level, canvas);
