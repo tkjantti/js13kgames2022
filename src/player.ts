@@ -83,11 +83,15 @@ export class Player extends GameObjectClass {
     return this.state === State.Dead;
   }
 
+  die(): void {
+    this.state = State.Dead;
+  }
+
   draw(): void {
     const context = this.context;
     context.save();
 
-    if (this.fallingToGround) {
+    if (this.isDead() || this.fallingToGround) {
       // Rotation is around top left corner, adjust accordingly:
       context.translate(0, this.height);
       context.rotate(-Math.PI / 2);

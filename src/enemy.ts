@@ -31,7 +31,8 @@ const SPEED = 10;
 type State =
   | { type: 'patrol' }
   | { type: 'alarm'; start: number }
-  | { type: 'goto'; target: Vector };
+  | { type: 'goto'; target: Vector }
+  | { type: 'attack' };
 
 function getFlashingColor(now: number): string {
   return Math.floor(now / 500) % 2 === 0 ? 'red' : 'white';
@@ -58,12 +59,13 @@ export class Enemy extends GameObjectClass {
     const now = performance.now();
 
     switch (this.state.type) {
-      case 'alarm':
+      case 'alarm': {
         if (now - this.state.start > 2000) {
           this.state = { type: 'patrol' };
         }
         break;
-      case 'patrol':
+      }
+      case 'patrol': {
         this.patrol();
         const player = this.player;
         if (!player.isDead() && this.position.distance(player.position) < 200) {
@@ -73,16 +75,27 @@ export class Enemy extends GameObjectClass {
           this.alarmed(player.position);
         }
         break;
-      case 'goto':
+      }
+      case 'goto': {
         const target = this.state.target;
         if (this.position.distance(target) > 200) {
           this.moveTowards(target);
         } else {
-          this.state = { type: 'patrol' };
+          this.state = { type: 'attack' };
           this.dx = 0;
           this.dy = 0;
         }
         break;
+      }
+      case 'attack': {
+        const player = this.player;
+        if (!player.isDead() && this.position.distance(player.position) < 300) {
+          this.moveTowards(player.position);
+        } else {
+          this.state = { type: 'patrol' };
+        }
+        break;
+      }
     }
 
     this.advance();
@@ -120,12 +133,12 @@ export class Enemy extends GameObjectClass {
     if (this.dx === 0) {
       this.dx = SPEED;
     } else if (this.dx < 0 && this.x <= this.area.x + 2 * this.width) {
-      this.dx *= -1;
+      this.dx = SPEED;
     } else if (
       this.dx > 0 &&
       this.area.x + this.area.width - 2 * this.width <= this.x
     ) {
-      this.dx *= -1;
+      this.dx = -SPEED;
     }
   }
 

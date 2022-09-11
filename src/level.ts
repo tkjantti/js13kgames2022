@@ -24,7 +24,7 @@
 
 import { Ladder, Platform } from './elements';
 import { Camera } from './camera';
-import { Sprite, Vector } from 'kontra';
+import { collides, Sprite, Vector } from 'kontra';
 import { Player } from './player';
 import { Enemy } from './enemy';
 import { random } from './utils';
@@ -171,6 +171,15 @@ export class Level implements Area {
     }
 
     this.player.customUpdate(this.ladders, this.platforms, camera);
+
+    if (!this.player.isDead()) {
+      for (let i = 0; i < this.enemies.length; i++) {
+        const enemy = this.enemies[i];
+        if (collides(enemy, this.player)) {
+          this.player.die();
+        }
+      }
+    }
   }
 
   isFailed(): boolean {
