@@ -93,6 +93,18 @@ export class Player extends GameObjectClass {
     }
   }
 
+  resurrect(): void {
+    if (this.state === State.Dead) {
+      this.state = State.OnPlatform;
+      this.width = STANDING_WIDTH;
+      this.height = STANDING_HEIGHT;
+      this.xVel = 0;
+      this.yVel = 0;
+      this.fallingToGround = false;
+      this.stopClimbing = false;
+    }
+  }
+
   draw(): void {
     const context = this.context;
     context.save();

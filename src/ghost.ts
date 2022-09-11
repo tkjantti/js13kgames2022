@@ -28,11 +28,15 @@ import { Level } from './level';
 const SPEED = 7;
 
 export class Ghost extends GameObjectClass {
+  startTime: number;
+
   constructor(private level: Level) {
     super({
       width: 30,
       height: 90,
     });
+
+    this.startTime = performance.now();
   }
 
   draw(): void {

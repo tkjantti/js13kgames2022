@@ -31,6 +31,8 @@ import { random, randomMinMax } from './utils';
 import { Area } from './area';
 import { Ghost } from './ghost';
 
+const TIME_AS_GHOST = 5000;
+
 export class Level implements Area {
   public number = 0;
 
@@ -54,6 +56,18 @@ export class Level implements Area {
 
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
+
+  getTimeAsGhost(): number | undefined {
+    if (!this.ghost) {
+      return undefined;
+    }
+
+    return (
+      Math.floor(
+        (TIME_AS_GHOST - (performance.now() - this.ghost.startTime)) / 1000,
+      ) + 1
+    );
+  }
 
   constructor(number: number) {
     this.number = number;
@@ -190,6 +204,8 @@ export class Level implements Area {
   }
 
   update(camera: Camera): void {
+    const now = performance.now();
+
     for (let i = 0; i < this.enemies.length; i++) {
       const enemy = this.enemies[i];
       enemy.update();
@@ -199,6 +215,16 @@ export class Level implements Area {
 
     if (this.ghost) {
       this.ghost.update();
+
+      if (now - this.ghost.startTime > TIME_AS_GHOST) {
+        this.player.x = this.ghost.x;
+        this.player.y = this.ghost.y;
+        this.player.resurrect();
+
+        this.ghost = undefined;
+
+        camera.follow(this.player);
+      }
     }
 
     if (!this.player.isDead()) {
@@ -209,9 +235,5 @@ export class Level implements Area {
         }
       }
     }
-  }
-
-  isFailed(): boolean {
-    return this.player && this.player.isDead();
   }
 }
