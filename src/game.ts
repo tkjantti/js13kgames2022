@@ -26,7 +26,8 @@ import { GameLoop, onKey, initKeys } from 'kontra';
 import { renderTexts, renderUi } from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
-import { createLevel, maxLevel } from './levels';
+
+const maxLevel = 1;
 
 enum State {
   Loading,
@@ -45,9 +46,9 @@ let gameLoop: GameLoop;
 let level: Level;
 let camera: Camera;
 
-const createStartScreenLoop = () => {
+const createStartScreenLoop = (): GameLoop => {
   return GameLoop({
-    render() {
+    render(): void {
       context.clearRect(0, 0, canvas.width, canvas.height);
 
       if (state === State.Loading) {
@@ -59,9 +60,9 @@ const createStartScreenLoop = () => {
   });
 };
 
-const createGameLoop = () => {
+const createGameLoop = (): GameLoop => {
   return GameLoop({
-    update() {
+    update(): void {
       level.update(camera);
       camera.update();
 
@@ -74,7 +75,7 @@ const createGameLoop = () => {
       }
     },
 
-    render() {
+    render(): void {
       context.save();
       context.translate(canvas.width / 2, canvas.height / 2);
       context.scale(camera.zoom, camera.zoom);
@@ -90,7 +91,7 @@ const createGameLoop = () => {
   });
 };
 
-const renderHelpTexts = (context: CanvasRenderingContext2D) => {
+const renderHelpTexts = (context: CanvasRenderingContext2D): void => {
   if (level.isFailed()) {
     renderTexts(context, 'Press ENTER to try again');
   } else if (gameFinished) {
@@ -104,7 +105,7 @@ const renderHelpTexts = (context: CanvasRenderingContext2D) => {
   }
 };
 
-const listenKeys = () => {
+const listenKeys = (): void => {
   onKey('enter', () => {
     if (levelNumber === 0) {
       levelNumber = 1;
@@ -133,7 +134,7 @@ const listenKeys = () => {
   });
 };
 
-const startLevel = (number: number) => {
+const startLevel = (number: number): void => {
   if (number > maxLevel) {
     gameFinished = true;
     return;
@@ -142,7 +143,7 @@ const startLevel = (number: number) => {
   gameLoop.stop();
   gameFinished = false;
 
-  level = createLevel(number);
+  level = new Level(number);
   camera = new Camera(level, canvas);
 
   if (number === 0) {
@@ -162,7 +163,7 @@ const startLevel = (number: number) => {
   gameLoop.start();
 };
 
-const renderStartScreen = (lastText: string) => {
+const renderStartScreen = (lastText: string): void => {
   renderTexts(
     context,
     'JS13kGames 2022 Entry                                     ',
@@ -179,13 +180,13 @@ const renderStartScreen = (lastText: string) => {
 export const initializeGame = (
   canvasReference: HTMLCanvasElement,
   contextReference: CanvasRenderingContext2D,
-) => {
+): void => {
   canvas = canvasReference;
   context = contextReference;
   state = State.Loading;
 
   initKeys();
-  level = new Level();
+  level = new Level(0);
   camera = new Camera(level, canvas);
 
   levelNumber = 0;
@@ -193,7 +194,7 @@ export const initializeGame = (
   gameLoop.start();
 };
 
-export const startGame = () => {
+export const startGame = (): void => {
   state = State.Running;
 
   listenKeys();

@@ -22,32 +22,9 @@
  * SOFTWARE.
  */
 
-import { Level } from './level';
-
-const createSimpleLevel = (level: Level) => {
-  level.width = 2000;
-  level.height = 1500;
-
-  level.player.x = 100;
-  level.player.y = level.height - level.player.height;
-
-  level.createTower(1000, 3);
-};
-
-const levelCreations = [null, createSimpleLevel];
-
-export const maxLevel = levelCreations.length - 1;
-
-export const createLevel = (n: number): Level => {
-  const level = new Level();
-
-  const create = levelCreations[n];
-
-  if (create) {
-    create(level);
-  }
-
-  level.number = n;
-
-  return level;
-};
+export interface Area {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}

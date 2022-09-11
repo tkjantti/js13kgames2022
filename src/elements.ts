@@ -27,7 +27,7 @@ import { GameObjectClass, SpriteClass } from 'kontra';
 const ladderWidth = 30;
 const ladderHeight = 300;
 
-const drawLadder = () => {
+const drawLadder = (): HTMLCanvasElement => {
   const stepGap = 15;
   const stepCount = ladderHeight / stepGap;
   const color = 'rgb(100,60,60)';

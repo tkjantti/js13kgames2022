@@ -26,7 +26,7 @@ import { initializeGame, startGame } from './game';
 
 const { canvas, context } = init();
 
-const resize = () => {
+const resize = (): void => {
   canvas.width = window.innerWidth - 10;
   canvas.height = window.innerHeight - 10;
 };

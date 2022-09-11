@@ -30,15 +30,10 @@ export interface Point {
 /*
  * Returns a random number between 0 and max.
  */
-export const random = (max = 1) => {
+export const random = (max = 1): number => {
   return Math.random() * max;
 };
 
-/*
- * Returns distance between two points.
- */
-export const getDistance = (a: Point, b: Point) => {
-  const xDiff = a.x - b.x;
-  const yDiff = a.y - b.y;
-  return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+export const randomMinMax = (min: number, max: number): number => {
+  return Math.random() * (max - min) + min;
 };
