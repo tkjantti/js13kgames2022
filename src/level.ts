@@ -152,7 +152,7 @@ export class Level implements Area {
       enemy.y = y - roomHeight / 2;
 
       const enemyIndex = this.enemies.length;
-      enemy.alarmed = (target: Vector) => {
+      enemy.alarmed = (target: Vector): void => {
         for (let i = 0; i < this.enemies.length; i++) {
           if (i !== enemyIndex) {
             const other = this.enemies[i];

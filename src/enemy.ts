@@ -41,6 +41,7 @@ function getFlashingColor(now: number): string {
 export class Enemy extends GameObjectClass {
   private state: State = { type: 'patrol' };
 
+  // eslint-disable-next-line
   alarmed: (target: Vector) => void = () => {};
 
   constructor(private area: Area, private player: Player) {
