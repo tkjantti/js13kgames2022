@@ -33,3 +33,7 @@ export interface Point {
 export const random = (max = 1): number => {
   return Math.random() * max;
 };
+
+export const randomMinMax = (min: number, max: number): number => {
+  return Math.random() * (max - min) + min;
+};

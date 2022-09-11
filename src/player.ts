@@ -28,9 +28,9 @@ import { Camera } from './camera';
 import { Platform } from './elements';
 
 const SPEED = 7;
-const SPEED_WHEN_CLIMBING = 1.5;
+const SPEED_WHEN_CLIMBING = 2;
 const JUMP_VELOCITY = -15;
-const CLIMB_SPEED = 4;
+const CLIMB_SPEED = 6;
 const DEADLY_FALLING_SPEED = 40;
 
 const OFF_LEDGE_JUMP_DELAY_MS = 200;

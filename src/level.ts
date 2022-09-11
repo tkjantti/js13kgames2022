@@ -27,7 +27,7 @@ import { Camera } from './camera';
 import { collides, Sprite, Vector } from 'kontra';
 import { Player } from './player';
 import { Enemy } from './enemy';
-import { random } from './utils';
+import { random, randomMinMax } from './utils';
 import { Area } from './area';
 
 export class Level implements Area {
@@ -156,7 +156,12 @@ export class Level implements Area {
         for (let i = 0; i < this.enemies.length; i++) {
           if (i !== enemyIndex) {
             const other = this.enemies[i];
-            other.goTo(target);
+            const r = 700;
+            const adjustedTarget = Vector(
+              target.x + randomMinMax(-r, r),
+              target.y + randomMinMax(-r, r),
+            );
+            other.goTo(adjustedTarget);
           }
         }
       };

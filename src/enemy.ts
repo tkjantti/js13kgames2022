@@ -26,13 +26,13 @@ import { GameObjectClass, Vector } from 'kontra';
 import { Area } from './area';
 import { Player } from './player';
 
-const SPEED = 10;
+const SPEED = 6;
 
 type State =
   | { type: 'patrol' }
   | { type: 'alarm'; start: number }
   | { type: 'goto'; target: Vector }
-  | { type: 'attack' };
+  | { type: 'attack'; start: number };
 
 function getFlashingColor(now: number): string {
   return Math.floor(now / 500) % 2 === 0 ? 'red' : 'white';
@@ -72,16 +72,16 @@ export class Enemy extends GameObjectClass {
           this.state = { type: 'alarm', start: now };
           this.dx = 0;
           this.dy = 0;
-          this.alarmed(player.position);
+          this.alarmed(Vector(player.x, player.y));
         }
         break;
       }
       case 'goto': {
         const target = this.state.target;
-        if (this.position.distance(target) > 200) {
+        if (this.position.distance(target) > 100) {
           this.moveTowards(target);
         } else {
-          this.state = { type: 'attack' };
+          this.state = { type: 'attack', start: now };
           this.dx = 0;
           this.dy = 0;
         }
@@ -89,9 +89,9 @@ export class Enemy extends GameObjectClass {
       }
       case 'attack': {
         const player = this.player;
-        if (!player.isDead() && this.position.distance(player.position) < 300) {
+        if (!player.isDead() && this.position.distance(player.position) < 350) {
           this.moveTowards(player.position);
-        } else {
+        } else if (now - this.state.start > 4000) {
           this.state = { type: 'patrol' };
         }
         break;
