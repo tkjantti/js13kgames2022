@@ -24,8 +24,10 @@
 
 import { Ladder, Platform } from './elements';
 import { Camera } from './camera';
-import { Sprite } from 'kontra';
+import { collides, Sprite } from 'kontra';
 import { Player } from './player';
+import { Enemy } from './enemy';
+import { random } from './utils';
 
 export class Level {
   public number = 0;
@@ -38,6 +40,8 @@ export class Level {
   public isFinished = false;
 
   public player: Player = new Player(this);
+
+  public enemies: Array<Enemy> = [];
 
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
@@ -62,6 +66,11 @@ export class Level {
     for (let i = 0; i < this.ladders.length; i++) {
       const ladder = this.ladders[i];
       ladder.render();
+    }
+
+    for (let i = 0; i < this.enemies.length; i++) {
+      const enemy = this.enemies[i];
+      enemy.render();
     }
 
     this.player.render();
@@ -96,20 +105,20 @@ export class Level {
     const roomCountX = this.width / roomWidth;
     const roomCountY = this.height / roomHeight;
 
-    const halfWidth = ((roomCountX - 1) * roomWidth) / 2;
+    const platformWidth = ((roomCountX - 1) * roomWidth) / 2;
 
     for (let yi = 1; yi < roomCountY; yi++) {
       const y = this.height - yi * roomHeight;
 
       const left = new Platform();
-      left.width = halfWidth;
+      left.width = platformWidth;
       left.x = 0;
       left.y = y;
       this.platforms.push(left);
 
       const right = new Platform();
-      right.width = halfWidth;
-      right.x = this.width - halfWidth;
+      right.width = platformWidth;
+      right.x = this.width - platformWidth;
       right.y = y;
       this.platforms.push(right);
 
@@ -126,10 +135,20 @@ export class Level {
         ladder.y = left.y;
         this.ladders.push(ladder);
       }
+
+      const enemy = new Enemy(this);
+      enemy.x = random(this.width);
+      enemy.y = y - roomHeight / 2;
+      this.enemies.push(enemy);
     }
   }
 
   update(camera: Camera): void {
+    for (let i = 0; i < this.enemies.length; i++) {
+      const enemy = this.enemies[i];
+      enemy.update();
+    }
+
     this.player.customUpdate(this.ladders, this.platforms, camera);
   }
 
