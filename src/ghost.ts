@@ -43,13 +43,28 @@ export class Ghost extends GameObjectClass {
     const context = this.context;
 
     context.save();
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, this.width, this.height);
+
+    const w = this.width * 1.4;
+    const h = this.height;
+
+    context.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    context.fillRect(0, h / 2, w, h / 2);
+
+    context.beginPath();
+    context.arc(w / 2, h / 2, w / 2, 0, 2 * Math.PI);
+    context.fill();
+
+    context.fillStyle = 'rgba(0, 0, 0, 0.9)';
+    context.beginPath();
+    context.arc(w * 0.3, h / 2, w * 0.16, 0, 2 * Math.PI);
+    context.arc(w * 0.7, h / 2, w * 0.16, 0, 2 * Math.PI);
+    context.fill();
+
     context.restore();
   }
 
   update(): void {
-    let { dx, dy } = this.handleControls();
+    const { dx, dy } = this.handleControls();
 
     this.updateHorizontalPosition(dx);
     this.updateVerticalPosition(dy);

@@ -26,6 +26,8 @@ import { Sprite, keyPressed, GameObjectClass, collides } from 'kontra';
 import { Level } from './level';
 import { Camera } from './camera';
 import { Platform } from './elements';
+// @ts-ignore
+import { playTune, SFX_JUMP, SFX_END } from './music.js';
 
 const SPEED = 7;
 const SPEED_WHEN_CLIMBING = 2;
@@ -91,6 +93,7 @@ export class Player extends GameObjectClass {
     if (this.state !== State.Dead) {
       this.state = State.Dead;
       this.died();
+      playTune(SFX_END);
     }
   }
 
@@ -285,6 +288,7 @@ export class Player extends GameObjectClass {
           this.isOnGround()) &&
         !(dx === 0 && ladderCollision.collidesHigh)
       ) {
+        playTune(SFX_JUMP);
         this.yVel = JUMP_VELOCITY;
         this.state = State.Falling;
         this.latestOnPlatformTime = 0;
