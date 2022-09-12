@@ -71,7 +71,7 @@ export class Ladder extends SpriteClass {
 export class Platform extends GameObjectClass {
   constructor() {
     super({
-      color: 'darkgray',
+      color: 'green',
       width: 200,
       height: 20,
     });
@@ -82,6 +82,8 @@ export class Platform extends GameObjectClass {
     cx.save();
     cx.fillStyle = this.color;
     cx.fillRect(0, 0, this.width, this.height);
+    cx.fillStyle = '#00A000';
+    cx.fillRect(0, 0, this.width, this.height / 4);
     cx.restore();
   }
 }
