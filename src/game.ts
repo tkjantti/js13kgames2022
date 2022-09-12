@@ -33,7 +33,7 @@ import {
 import { Level } from './level';
 import { Camera } from './camera';
 // @ts-ignore
-import { initialize, playTune, SFX_MAIN, SFX_END } from './music.js';
+import { initialize, playTune, SFX_MAIN } from './music.js';
 
 enum State {
   Loading,

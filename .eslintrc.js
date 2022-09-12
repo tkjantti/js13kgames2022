@@ -20,6 +20,7 @@ module.exports = {
       files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': 'error',
+        '@typescript-eslint/ban-ts-comment': 'off',
       },
     },
   ],
