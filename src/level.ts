@@ -232,7 +232,7 @@ export class Level implements Area {
 
       const right = new Platform();
       right.width = platformWidth;
-      right.x = this.width - platformWidth;
+      right.x = this.width - platformWidth - 100;
       right.y = y;
       this.platforms.push(right);
 
