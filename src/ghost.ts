@@ -41,8 +41,11 @@ export class Ghost extends GameObjectClass {
 
   draw(): void {
     const context = this.context;
+    const now = performance.now();
 
     context.save();
+
+    context.globalAlpha = Math.min((now - this.startTime) / 3000, 1);
 
     const w = this.width * 1.4;
     const h = this.height;
