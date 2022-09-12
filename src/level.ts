@@ -171,7 +171,9 @@ export class Level implements Area {
     const newEnemies: Array<Enemy> = [];
 
     for (let i = 0; i < ENEMY_WAWE_SIZE; i++) {
-      const yi = Math.floor(random(roomCountY));
+      // Enemies closer to the player at start.
+      const yi = this.enemyWaweCount === 0 ? 1 : Math.floor(random(roomCountY));
+
       const y = this.height - yi * roomHeight;
 
       if (y - roomHeight < this.player.y && this.player.y < y) {
