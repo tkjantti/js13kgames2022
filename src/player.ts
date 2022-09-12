@@ -139,8 +139,9 @@ export class Player extends GameObjectClass {
       STANDING_HEIGHT / playerImageHeight,
     );
     // context.drawImage(this.image, 0, 0);
-    context.fillStyle = 'green';
-    context.fillRect(0, 0, playerImageWidth, playerImageHeight);
+    context.fillStyle = 'orange';
+    context.fillRect(0, 0, playerImageWidth, 20);
+    context.fillRect(0, 24, playerImageWidth, playerImageHeight - 24);
 
     context.restore();
   }
