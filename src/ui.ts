@@ -42,6 +42,16 @@ export const renderTexts = (
   }
 };
 
+export const renderScore = (
+  context: CanvasRenderingContext2D,
+  score: number,
+): void => {
+  context.fillStyle = 'white';
+  context.font = '20px Sans-serif';
+
+  context.fillText('SCORE     ' + score, 60, 35);
+};
+
 export const renderLives = (
   context: CanvasRenderingContext2D,
   lives: number,
@@ -51,8 +61,7 @@ export const renderLives = (
   context.fillStyle = 'white';
   context.font = '20px Sans-serif';
 
-  context.fillText('LIVES', canvas.width - 120, 35);
-  context.fillText('' + lives, canvas.width - 40, 35);
+  context.fillText('LIVES     ' + lives, canvas.width - 200, 35);
 };
 
 export const renderBigNumber = (

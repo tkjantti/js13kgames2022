@@ -23,7 +23,7 @@
  */
 
 import { GameLoop, onKey, initKeys } from 'kontra';
-import { renderBigNumber, renderLives, renderTexts } from './ui';
+import { renderBigNumber, renderLives, renderScore, renderTexts } from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
 
@@ -84,12 +84,18 @@ const createGameLoop = (): GameLoop => {
 
       context.restore();
 
+      renderScore(context, level.score);
       renderLives(context, level.lives);
 
       const timeLeft = level.getTimeAsGhost();
 
       if (level.isOver()) {
-        renderTexts(context, 'GAME OVER!', 'Press enter to try again');
+        renderTexts(
+          context,
+          'GAME OVER!',
+          'Your score: ' + level.score,
+          'Press enter to try again',
+        );
       } else if (timeLeft != null) {
         renderTexts(context, 'Continue as ghost for a while!');
         renderBigNumber(context, timeLeft);
@@ -103,7 +109,7 @@ const listenKeys = (): void => {
     if (levelNumber === 0) {
       levelNumber = 1;
       startLevel(levelNumber);
-    } else {
+    } else if (level.isOver()) {
       levelNumber = 0;
       startLevel(levelNumber);
     }
@@ -149,6 +155,8 @@ const renderStartScreen = (lastText: string): void => {
   renderTexts(
     context,
     'JS13kGames 2022 Entry                                     ',
+    '',
+    'Jump on enemies to kill them and score points.',
     '',
     'Controls                                                   ',
     'Use ARROWS or W/A/S/D to move. Jump with UP or W.          ',
