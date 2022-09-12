@@ -28,7 +28,7 @@ import {
   jumpSfx,
   endSfx,
 } from "./musicdata.ts";
-import CPlayer from "./musicplayer.js";
+import CPlayer from "./musicPlayer.js";
 
 export const SFX_START = "start";
 export const SFX_MAIN = "main";
