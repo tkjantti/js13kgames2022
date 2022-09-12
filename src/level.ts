@@ -33,10 +33,13 @@ import { Ghost } from './ghost';
 
 const TIME_AS_GHOST = 5000;
 
+const ENEMY_WAWE_INTERVAL = 10000;
+const ENEMY_WAWE_SIZE = 4;
+
 function collidesFromAbove(player: Player, enemy: Enemy): boolean {
   const playerCenterY = player.y + player.height / 2;
   const isAbove = playerCenterY < enemy.y;
-  return isAbove && player.yVel > 0;
+  return isAbove;
 }
 
 export class Level implements Area {
@@ -62,9 +65,12 @@ export class Level implements Area {
   private ghost: Ghost | undefined;
 
   private enemies: Array<Enemy> = [];
+  private enemyWaweCount = 0;
 
   private ladders: Array<Sprite> = [];
   private platforms: Array<Platform> = [];
+
+  private lastEnemyAddTime: number;
 
   getTimeAsGhost(): number | undefined {
     if (!this.ghost) {
@@ -84,12 +90,15 @@ export class Level implements Area {
 
   constructor(number: number) {
     this.number = number;
+    this.lastEnemyAddTime = performance.now();
 
     if (number >= 1) {
       this.fill();
 
       this.player.x = 100;
       this.player.y = this.height - this.player.height;
+
+      this.addEnemies();
 
       this.player.died = () => {
         this.lives--;
@@ -155,6 +164,54 @@ export class Level implements Area {
     context.restore();
   }
 
+  private addEnemies(): void {
+    const roomHeight = 300;
+    const roomCountY = this.height / roomHeight;
+
+    const newEnemies: Array<Enemy> = [];
+
+    for (let i = 0; i < ENEMY_WAWE_SIZE; i++) {
+      const yi = Math.floor(random(roomCountY));
+      const y = this.height - yi * roomHeight;
+
+      if (y - roomHeight < this.player.y && this.player.y < y) {
+        // skip if in the same area as player.
+        continue;
+      }
+
+      const patrolingArea: Area = {
+        x: 0,
+        y: y - roomHeight,
+        width: this.width,
+        height: roomHeight,
+      };
+
+      const enemy = new Enemy(patrolingArea, this.player, this.enemyWaweCount);
+      enemy.x = random(this.width);
+      enemy.y = y - roomHeight / 2;
+
+      const enemyIndex = newEnemies.length;
+      enemy.alarmed = (target: Vector): void => {
+        for (let i = 0; i < newEnemies.length; i++) {
+          if (i !== enemyIndex) {
+            const other = newEnemies[i];
+            const r = 700;
+            const adjustedTarget = Vector(
+              target.x + randomMinMax(-r, r),
+              target.y + randomMinMax(-r, r),
+            );
+            other.goTo(adjustedTarget);
+          }
+        }
+      };
+
+      newEnemies.push(enemy);
+    }
+
+    this.enemies = this.enemies.concat(newEnemies);
+    this.enemyWaweCount++;
+  }
+
   private fill(): void {
     const roomWidth = 400;
     const roomHeight = 300;
@@ -192,33 +249,6 @@ export class Level implements Area {
         ladder.y = left.y;
         this.ladders.push(ladder);
       }
-
-      const patrolingArea: Area = {
-        x: 0,
-        y: y - roomHeight,
-        width: this.width,
-        height: roomHeight,
-      };
-
-      const enemy = new Enemy(patrolingArea, this.player);
-      enemy.x = random(this.width);
-      enemy.y = y - roomHeight / 2;
-
-      const enemyIndex = this.enemies.length;
-      enemy.alarmed = (target: Vector): void => {
-        for (let i = 0; i < this.enemies.length; i++) {
-          if (i !== enemyIndex) {
-            const other = this.enemies[i];
-            const r = 700;
-            const adjustedTarget = Vector(
-              target.x + randomMinMax(-r, r),
-              target.y + randomMinMax(-r, r),
-            );
-            other.goTo(adjustedTarget);
-          }
-        }
-      };
-      this.enemies.push(enemy);
     }
   }
 
@@ -263,6 +293,11 @@ export class Level implements Area {
           }
         }
       }
+    }
+
+    if (now - this.lastEnemyAddTime > ENEMY_WAWE_INTERVAL) {
+      this.addEnemies();
+      this.lastEnemyAddTime = now;
     }
   }
 }

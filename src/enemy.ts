@@ -45,12 +45,14 @@ export class Enemy extends GameObjectClass {
   // eslint-disable-next-line
   alarmed: (target: Vector) => void = () => {};
 
-  constructor(private area: Area, private player: Player) {
+  constructor(private area: Area, private player: Player, wawe: number) {
     super({
       width: 30,
       height: 30,
       dx: SPEED,
     });
+    const red = Math.min(160 + wawe * 5, 255);
+    this.color = 'rgb(' + red + ', 50, 50)';
   }
 
   goTo(point: Vector): void {
@@ -126,7 +128,7 @@ export class Enemy extends GameObjectClass {
         context.fillRect(0, 0, this.width, this.height);
         break;
       default:
-        context.fillStyle = 'white';
+        context.fillStyle = this.color;
         context.fillRect(0, 0, this.width, this.height);
         break;
     }
