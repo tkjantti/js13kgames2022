@@ -182,6 +182,11 @@ export class Player extends GameObjectClass {
     camera: Camera,
   ): void {
     if (this.state === State.Dead) {
+      // Fall down
+      if (this.y + this.height < this.level.height) {
+        this.yVel += GRAVITY;
+        this.y += this.yVel;
+      }
       return;
     }
 

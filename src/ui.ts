@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-import { Level } from './level';
-
 export const renderTexts = (
   context: CanvasRenderingContext2D,
   ...texts: Array<string>
@@ -50,6 +48,18 @@ export const renderScore = (
   context.font = '20px Sans-serif';
 
   context.fillText('SCORE     ' + score, 60, 35);
+};
+
+export const renderMultiplier = (
+  context: CanvasRenderingContext2D,
+  score: number,
+): void => {
+  const canvas = context.canvas;
+
+  context.fillStyle = 'white';
+  context.font = '20px Sans-serif';
+
+  context.fillText('MULTIPLIER     ' + score, canvas.width / 2 - 100, 35);
 };
 
 export const renderLives = (

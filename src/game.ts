@@ -23,13 +23,17 @@
  */
 
 import { GameLoop, onKey, initKeys } from 'kontra';
-import { renderBigNumber, renderLives, renderScore, renderTexts } from './ui';
+import {
+  renderBigNumber,
+  renderLives,
+  renderMultiplier,
+  renderScore,
+  renderTexts,
+} from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
 // @ts-ignore
 import { initialize, playTune, SFX_MAIN, SFX_END } from './music.js';
-
-const maxLevel = 1;
 
 enum State {
   Loading,
@@ -89,6 +93,7 @@ const createGameLoop = (): GameLoop => {
       context.restore();
 
       renderScore(context, level.score);
+      renderMultiplier(context, level.getMultiplier());
       renderLives(context, level.lives);
 
       const timeLeft = level.getTimeAsGhost();
