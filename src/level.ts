@@ -84,6 +84,10 @@ export class Level implements Area {
     );
   }
 
+  getMultiplier(): number {
+    return 1;
+  }
+
   isOver(): boolean {
     return this.lives <= 0;
   }

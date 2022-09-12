@@ -23,7 +23,13 @@
  */
 
 import { GameLoop, onKey, initKeys } from 'kontra';
-import { renderBigNumber, renderLives, renderScore, renderTexts } from './ui';
+import {
+  renderBigNumber,
+  renderLives,
+  renderMultiplier,
+  renderScore,
+  renderTexts,
+} from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
 // @ts-ignore
@@ -87,6 +93,7 @@ const createGameLoop = (): GameLoop => {
       context.restore();
 
       renderScore(context, level.score);
+      renderMultiplier(context, level.getMultiplier());
       renderLives(context, level.lives);
 
       const timeLeft = level.getTimeAsGhost();
