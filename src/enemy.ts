@@ -26,13 +26,14 @@ import { GameObjectClass, Vector } from 'kontra';
 import { Area } from './area';
 import { Player } from './player';
 
-const SPEED = 6;
+const SPEED = 3;
 
 type State =
   | { type: 'patrol' }
   | { type: 'alarm'; start: number }
   | { type: 'goto'; target: Vector }
-  | { type: 'attack'; start: number };
+  | { type: 'attack'; start: number }
+  | { type: 'dead' };
 
 function getFlashingColor(now: number): string {
   return Math.floor(now / 500) % 2 === 0 ? 'red' : 'white';
@@ -56,10 +57,20 @@ export class Enemy extends GameObjectClass {
     this.state = { type: 'goto', target: point };
   }
 
+  die(): void {
+    this.state = { type: 'dead' };
+  }
+
+  isDead(): boolean {
+    return this.state.type === 'dead';
+  }
+
   update(): void {
     const now = performance.now();
 
     switch (this.state.type) {
+      case 'dead':
+        break;
       case 'alarm': {
         if (now - this.state.start > 2000) {
           this.state = { type: 'patrol' };
@@ -108,15 +119,17 @@ export class Enemy extends GameObjectClass {
     context.save();
 
     switch (this.state.type) {
-      case 'patrol':
-        context.fillStyle = 'white';
+      case 'dead':
         break;
       case 'alarm':
         context.fillStyle = getFlashingColor(now);
+        context.fillRect(0, 0, this.width, this.height);
+        break;
+      default:
+        context.fillStyle = 'white';
+        context.fillRect(0, 0, this.width, this.height);
         break;
     }
-
-    context.fillRect(0, 0, this.width, this.height);
 
     context.restore();
   }

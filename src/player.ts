@@ -29,7 +29,7 @@ import { Platform } from './elements';
 
 const SPEED = 7;
 const SPEED_WHEN_CLIMBING = 2;
-const JUMP_VELOCITY = -15;
+const JUMP_VELOCITY = -20;
 const CLIMB_SPEED = 6;
 const DEADLY_FALLING_SPEED = 40;
 
@@ -58,7 +58,7 @@ const playerImageHeight = 90;
 
 export class Player extends GameObjectClass {
   private xVel = 0; // Horizontal velocity
-  private yVel = 0; // Vertical velocity, affected by jumping and gravity
+  public yVel = 0; // Vertical velocity, affected by jumping and gravity
 
   private latestOnPlatformTime = 0;
   private state: State = State.OnPlatform;

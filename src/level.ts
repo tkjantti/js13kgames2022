@@ -33,6 +33,12 @@ import { Ghost } from './ghost';
 
 const TIME_AS_GHOST = 5000;
 
+function collidesFromAbove(player: Player, enemy: Enemy): boolean {
+  const playerCenterY = player.y + player.height / 2;
+  const isAbove = playerCenterY < enemy.y;
+  return isAbove && player.yVel > 0;
+}
+
 export class Level implements Area {
   public number = 0;
 
@@ -243,8 +249,18 @@ export class Level implements Area {
     if (!this.player.isDead()) {
       for (let i = 0; i < this.enemies.length; i++) {
         const enemy = this.enemies[i];
-        if (collides(enemy, this.player)) {
-          this.player.die();
+
+        if (enemy.isDead()) {
+          continue;
+        }
+
+        if (collides(this.player, enemy)) {
+          if (collidesFromAbove(this.player, enemy)) {
+            enemy.die();
+            this.score++;
+          } else {
+            this.player.die();
+          }
         }
       }
     }

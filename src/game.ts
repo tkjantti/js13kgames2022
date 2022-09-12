@@ -90,7 +90,12 @@ const createGameLoop = (): GameLoop => {
       const timeLeft = level.getTimeAsGhost();
 
       if (level.isOver()) {
-        renderTexts(context, 'GAME OVER!', 'Press enter to try again');
+        renderTexts(
+          context,
+          'GAME OVER!',
+          'Your score: ' + level.score,
+          'Press enter to try again',
+        );
       } else if (timeLeft != null) {
         renderTexts(context, 'Continue as ghost for a while!');
         renderBigNumber(context, timeLeft);
