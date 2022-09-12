@@ -31,6 +31,8 @@ import { random, randomMinMax } from './utils';
 import { Area } from './area';
 import { Ghost } from './ghost';
 
+const ROOM_HEIGHT = 300;
+
 const TIME_AS_GHOST = 5000;
 
 const ENEMY_WAWE_INTERVAL = 10000;
@@ -85,7 +87,35 @@ export class Level implements Area {
   }
 
   getMultiplier(): number {
-    return 1;
+    if (this.player.y > this.height - 1 * ROOM_HEIGHT) {
+      return 1;
+    }
+    if (this.player.y > this.height - 2 * ROOM_HEIGHT) {
+      return 2;
+    }
+    if (this.player.y > this.height - 3 * ROOM_HEIGHT) {
+      return 3;
+    }
+    if (this.player.y > this.height - 4 * ROOM_HEIGHT) {
+      return 4;
+    }
+    if (this.player.y > this.height - 5 * ROOM_HEIGHT) {
+      return 5;
+    }
+    if (this.player.y > this.height - 6 * ROOM_HEIGHT) {
+      return 6;
+    }
+    if (this.player.y > this.height - 7 * ROOM_HEIGHT) {
+      return 7;
+    }
+    if (this.player.y > this.height - 8 * ROOM_HEIGHT) {
+      return 8;
+    }
+    if (this.player.y > this.height - 9 * ROOM_HEIGHT) {
+      return 9;
+    }
+
+    return 10;
   }
 
   isOver(): boolean {
@@ -169,8 +199,7 @@ export class Level implements Area {
   }
 
   private addEnemies(): void {
-    const roomHeight = 300;
-    const roomCountY = this.height / roomHeight;
+    const roomCountY = this.height / ROOM_HEIGHT;
 
     const newEnemies: Array<Enemy> = [];
 
@@ -178,23 +207,23 @@ export class Level implements Area {
       // Enemies closer to the player at start.
       const yi = this.enemyWaweCount === 0 ? 1 : Math.floor(random(roomCountY));
 
-      const y = this.height - yi * roomHeight;
+      const y = this.height - yi * ROOM_HEIGHT;
 
-      if (y - roomHeight < this.player.y && this.player.y < y) {
+      if (y - ROOM_HEIGHT < this.player.y && this.player.y < y) {
         // skip if in the same area as player.
         continue;
       }
 
       const patrolingArea: Area = {
         x: 0,
-        y: y - roomHeight,
+        y: y - ROOM_HEIGHT,
         width: this.width,
-        height: roomHeight,
+        height: ROOM_HEIGHT,
       };
 
       const enemy = new Enemy(patrolingArea, this.player, this.enemyWaweCount);
       enemy.x = random(this.width);
-      enemy.y = y - roomHeight / 2;
+      enemy.y = y - ROOM_HEIGHT / 2;
 
       const enemyIndex = newEnemies.length;
       enemy.alarmed = (target: Vector): void => {
@@ -220,15 +249,14 @@ export class Level implements Area {
 
   private fill(): void {
     const roomWidth = 400;
-    const roomHeight = 300;
 
     const roomCountX = this.width / roomWidth;
-    const roomCountY = this.height / roomHeight;
+    const roomCountY = this.height / ROOM_HEIGHT;
 
     const platformWidth = ((roomCountX - 1) * roomWidth) / 2;
 
     for (let yi = 1; yi < roomCountY; yi++) {
-      const y = this.height - yi * roomHeight;
+      const y = this.height - yi * ROOM_HEIGHT;
 
       const left = new Platform();
       left.width = platformWidth;
@@ -351,7 +379,7 @@ export class Level implements Area {
         if (collides(this.player, enemy)) {
           if (collidesFromAbove(this.player, enemy)) {
             enemy.die();
-            this.score++;
+            this.score += this.getMultiplier();
           } else {
             this.player.die();
           }
