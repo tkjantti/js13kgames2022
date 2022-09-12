@@ -28,7 +28,7 @@ const ladderWidth = 30;
 const ladderHeight = 300;
 
 const drawLadder = (): HTMLCanvasElement => {
-  const stepGap = 15;
+  const stepGap = 64;
   const stepCount = ladderHeight / stepGap;
   const color = 'rgb(100,60,60)';
   const color2 = 'rgb(80,20,20)';
@@ -43,9 +43,11 @@ const drawLadder = (): HTMLCanvasElement => {
 
     for (let i = 0; i < stepCount; i++) {
       cx.fillStyle = color2;
-      cx.fillRect(8, i * stepGap, ladderWidth - 16, stepGap / 2);
+      cx.fillRect(0, i * stepGap, ladderWidth / 3, stepGap);
+      cx.fillRect(20, i * stepGap, ladderWidth / 4, stepGap);
+
       cx.fillStyle = color;
-      cx.fillRect(0, i * stepGap + stepGap / 2, ladderWidth, stepGap / 2);
+      cx.fillRect(0, i * stepGap + stepGap / 2, ladderWidth, stepGap / 10);
     }
 
     cx.restore();
