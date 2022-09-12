@@ -238,18 +238,76 @@ export class Level implements Area {
       right.y = y;
       this.platforms.push(right);
 
-      for (let xi = 0; xi < 3; xi++) {
-        const ladder = new Ladder();
-        ladder.x = xi * roomWidth + 10;
-        ladder.y = left.y;
-        this.ladders.push(ladder);
-      }
+      if (yi < 3) {
+        for (let xi = 0; xi < 3; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 10;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
 
-      for (let xi = 4; xi < roomCountX; xi++) {
-        const ladder = new Ladder();
-        ladder.x = xi * roomWidth + 10;
-        ladder.y = left.y;
-        this.ladders.push(ladder);
+        for (let xi = 4; xi < roomCountX; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 10;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+      } else if (yi < 4) {
+        for (let xi = 1; xi < 3; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth - 200;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+
+        for (let xi = 4; xi < roomCountX - 1; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 200;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+      } else if (yi < 5) {
+        for (let xi = 1; xi < 3; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth - 100;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+
+        for (let xi = 4; xi < roomCountX - 1; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 200;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+      } else if (yi < 6) {
+        for (let xi = 1; xi < 2; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 10;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+
+        for (let xi = 5; xi < roomCountX; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 10;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+      } else if (yi < 7) {
+        for (let xi = 2; xi < 3; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 10;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
+
+        for (let xi = 4; xi < roomCountX - 1; xi++) {
+          const ladder = new Ladder();
+          ladder.x = xi * roomWidth + 10;
+          ladder.y = left.y;
+          this.ladders.push(ladder);
+        }
       }
     }
   }
