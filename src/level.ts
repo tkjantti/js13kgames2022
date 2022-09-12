@@ -53,7 +53,7 @@ export class Level implements Area {
   public left = 0;
   public top = 0;
   public width = 2400;
-  public height = 2300;
+  public height = 2700;
 
   public score = 0;
   public lives = 3;
