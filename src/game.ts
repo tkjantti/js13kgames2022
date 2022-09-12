@@ -156,6 +156,8 @@ const renderStartScreen = (lastText: string): void => {
     context,
     'JS13kGames 2022 Entry                                     ',
     '',
+    'Jump on enemies to kill them and score points.',
+    '',
     'Controls                                                   ',
     'Use ARROWS or W/A/S/D to move. Jump with UP or W.          ',
     '',
