@@ -116,7 +116,6 @@ export const playTune = tune => {
     }
     case SFX_END: {
       FadeIn(endfx, 0.5);
-      endTune.currentTime = 0;
       FadeOut(mainTune);
       break;
     }
@@ -153,10 +152,6 @@ export const stopTune = tune => {
   switch (tune) {
     case SFX_MAIN: {
       FadeOut(mainTune);
-      break;
-    }
-    case SFX_END: {
-      FadeOut(endTune);
       break;
     }
   }
