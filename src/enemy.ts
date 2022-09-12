@@ -36,7 +36,9 @@ type State =
   | { type: 'dead' };
 
 function getFlashingColor(now: number): string {
-  return Math.floor(now / 500) % 2 === 0 ? 'red' : 'white';
+  return Math.floor(now / 500) % 2 === 0
+    ? 'rgba(255, 0, 0, 0.9)'
+    : 'rgba(255, 255, 255, 0.9';
 }
 
 export class Enemy extends GameObjectClass {
@@ -51,7 +53,7 @@ export class Enemy extends GameObjectClass {
       height: 30,
       dx: SPEED,
     });
-    const red = Math.min(160 + wawe * 5, 255);
+    const red = Math.min(160 + wawe * 5, 240);
     this.color = 'rgb(' + red + ', 50, 50)';
   }
 
@@ -119,17 +121,28 @@ export class Enemy extends GameObjectClass {
     const now = performance.now();
     const context = this.context;
     context.save();
-
+    const w = this.width * 1.4;
+    const h = this.height;
     switch (this.state.type) {
       case 'dead':
         break;
       case 'alarm':
         context.fillStyle = getFlashingColor(now);
-        context.fillRect(0, 0, this.width, this.height);
+
+        context.fillRect(0, h / 2, w, h / 2);
+
+        context.beginPath();
+        context.arc(w / 2, h / 2, w / 2, 0, 2 * Math.PI);
+        context.fill();
         break;
       default:
-        context.fillStyle = this.color;
-        context.fillRect(0, 0, this.width, this.height);
+        context.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        context.fillRect(0, h / 2, w, h / 2);
+
+        context.beginPath();
+        context.arc(w / 2, h / 2, w / 2, 0, 2 * Math.PI);
+        context.fill();
+
         break;
     }
 
