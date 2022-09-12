@@ -44,6 +44,7 @@ export class Level implements Area {
   public width = 2400;
   public height = 2300;
 
+  public score = 0;
   public lives = 3;
 
   public isFinished = false;

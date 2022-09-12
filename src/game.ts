@@ -23,7 +23,7 @@
  */
 
 import { GameLoop, onKey, initKeys } from 'kontra';
-import { renderBigNumber, renderLives, renderTexts } from './ui';
+import { renderBigNumber, renderLives, renderScore, renderTexts } from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
 
@@ -84,6 +84,7 @@ const createGameLoop = (): GameLoop => {
 
       context.restore();
 
+      renderScore(context, level.score);
       renderLives(context, level.lives);
 
       const timeLeft = level.getTimeAsGhost();
