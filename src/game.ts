@@ -109,7 +109,7 @@ const listenKeys = (): void => {
     if (levelNumber === 0) {
       levelNumber = 1;
       startLevel(levelNumber);
-    } else {
+    } else if (level.isOver()) {
       levelNumber = 0;
       startLevel(levelNumber);
     }
