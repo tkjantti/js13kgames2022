@@ -26,6 +26,8 @@ import { GameLoop, onKey, initKeys } from 'kontra';
 import { renderBigNumber, renderLives, renderTexts } from './ui';
 import { Level } from './level';
 import { Camera } from './camera';
+// @ts-ignore
+import { initialize, playTune, SFX_MAIN, SFX_END } from './music.js';
 
 const maxLevel = 1;
 
@@ -34,6 +36,8 @@ enum State {
   Running,
   LevelFinished,
 }
+
+let assetsLoaded = false;
 
 let canvas: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
@@ -50,7 +54,7 @@ const createStartScreenLoop = (): GameLoop => {
     render(): void {
       context.clearRect(0, 0, canvas.width, canvas.height);
 
-      if (state === State.Loading) {
+      if (state === State.Loading || !assetsLoaded) {
         renderStartScreen('Loading.............          ');
       } else {
         renderStartScreen('Press enter to start          ');
@@ -137,6 +141,7 @@ const startLevel = (number: number): void => {
   if (number === 0) {
     gameLoop = createStartScreenLoop();
   } else {
+    playTune(SFX_MAIN);
     camera.follow(level.player);
     gameLoop = createGameLoop();
   }
@@ -168,11 +173,15 @@ export const initializeGame = (
   state = State.Loading;
 
   initKeys();
+  initialize().then(() => {
+    assetsLoaded = true;
+  });
   level = new Level(0);
   camera = new Camera(level, canvas);
 
   levelNumber = 0;
   gameLoop = createStartScreenLoop();
+
   gameLoop.start();
 };
 
