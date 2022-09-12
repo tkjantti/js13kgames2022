@@ -48,6 +48,7 @@ interface LadderCollision {
 enum State {
   OnPlatform,
   Falling,
+  Dropping,
   Climbing,
   Dead,
 }
@@ -260,6 +261,8 @@ export class Player extends GameObjectClass {
     }
 
     const upPressed = keyPressed('arrowup') || keyPressed('w');
+    const downPressed = keyPressed('arrowdown') || keyPressed('s');
+
     if (!upPressed) {
       // Up key must be released to jump after reaching the top of
       // the stairs.
@@ -292,14 +295,15 @@ export class Player extends GameObjectClass {
         dy -= CLIMB_SPEED;
       }
       if (this.state === State.Climbing) this.moveLeftFoot++;
-    } else if (
-      (keyPressed('arrowdown') || keyPressed('s')) &&
-      ladderCollision.collision
-    ) {
+    } else if (downPressed && ladderCollision.collision) {
       this.state = State.Climbing;
       this.yVel = 0;
       dy += CLIMB_SPEED;
       this.moveLeftFoot++;
+    } else if (downPressed && platform) {
+      this.state = State.Dropping;
+      this.dropStartTime = now;
+      dy = this.height + 25;
     }
 
     return { dx, dy };
@@ -337,6 +341,9 @@ export class Player extends GameObjectClass {
     } else if (this.fallingToGround) {
       this.state = State.Falling;
       this.y += dy;
+    } else if (this.state === State.Dropping) {
+      this.y += dy;
+      this.state = State.Falling;
     } else if (this.state === State.Climbing) {
       this.y += dy;
     } else if (dy > 0 && platform) {
