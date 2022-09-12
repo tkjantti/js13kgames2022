@@ -136,8 +136,6 @@ export class Enemy extends GameObjectClass {
         context.fill();
         break;
       default:
-        context.fillStyle = this.color;
-
         context.fillStyle = 'rgba(255, 255, 255, 0.9)';
         context.fillRect(0, h / 2, w, h / 2);
 
