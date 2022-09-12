@@ -100,7 +100,7 @@ export class Level implements Area {
 
       this.addEnemies();
 
-      this.player.died = () => {
+      this.player.died = (): void => {
         this.lives--;
 
         if (this.lives > 0) {

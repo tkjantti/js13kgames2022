@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-import { Level } from './level';
-
 export const renderTexts = (
   context: CanvasRenderingContext2D,
   ...texts: Array<string>

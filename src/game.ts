@@ -29,8 +29,6 @@ import { Camera } from './camera';
 // @ts-ignore
 import { initialize, playTune, SFX_MAIN, SFX_END } from './music.js';
 
-const maxLevel = 1;
-
 enum State {
   Loading,
   Running,
