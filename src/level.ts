@@ -54,7 +54,7 @@ export class Level implements Area {
   public left = 0;
   public top = 0;
   public width = 2400;
-  public height = 2700;
+  public height = 3300;
 
   public score = 0;
   public lives = 5;
@@ -114,10 +114,13 @@ export class Level implements Area {
       return 8;
     }
     if (this.player.y > this.height - 9 * ROOM_HEIGHT) {
-      return 9;
+      return 10;
+    }
+    if (this.player.y > this.height - 10 * ROOM_HEIGHT) {
+      return 12;
     }
 
-    return 10;
+    return 20;
   }
 
   isOver(): boolean {
