@@ -101,12 +101,12 @@ const createGameLoop = (): GameLoop => {
       if (level.isOver()) {
         renderTexts(
           context,
-          'GAME OVER!',
-          'Your score: ' + level.score,
-          'Press enter to try again',
+          'GAME OVER!               ',
+          'Your score: ' + level.score + '            ',
+          'Press enter to try again.',
         );
       } else if (timeLeft != null) {
-        renderTexts(context, 'Continue as ghost for a while!');
+        renderTexts(context, 'Continue as ghost for a while!         ');
         renderBigNumber(context, timeLeft);
       }
     },
@@ -166,12 +166,12 @@ const renderStartScreen = (lastText: string): void => {
     context,
     'JS13kGames 2022 Entry                                     ',
     '',
-    'Jump on enemies to kill them and score points.',
+    'Jump on enemies to kill them and score points.            ',
     '',
-    'Controls                                                   ',
-    'Use ARROWS or W/A/S/D to move. Jump with UP or W.          ',
+    'Controls                                                  ',
+    'Use ARROWS or W/A/S/D to move. Jump with UP or W.         ',
     '',
-    '(c) 2022 by Sami H & Tero J          ',
+    '(c) 2022 by Sami H & Tero J                               ',
     '',
     lastText,
   );
