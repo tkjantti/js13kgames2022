@@ -34,7 +34,7 @@ import { Ghost } from './ghost';
 const ROOM_HEIGHT = 300;
 
 const GHOST_APPEAR_TIME = 1000;
-const TIME_AS_GHOST = 5000;
+const TIME_AS_GHOST = 6000;
 
 const ENEMY_WAWE_INTERVAL = 10000;
 const ENEMY_WAWE_SIZE = 4;
@@ -57,7 +57,7 @@ export class Level implements Area {
   public height = 2700;
 
   public score = 0;
-  public lives = 3;
+  public lives = 5;
 
   public isFinished = false;
 
