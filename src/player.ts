@@ -30,16 +30,16 @@ import { Platform } from './elements';
 import { playTune, SFX_JUMP, SFX_END } from './music.js';
 
 const playerImage = new Image();
-playerImage.src = 'images/stand.png';
+playerImage.src = 'stand.png';
 
 const playerLeftfootImage = new Image();
-playerLeftfootImage.src = 'images/walk.png';
+playerLeftfootImage.src = 'walk.png';
 
 const playerverticalLeftfootImage = new Image();
-playerverticalLeftfootImage.src = 'images/climb.png';
+playerverticalLeftfootImage.src = 'climb.png';
 
 const playerverticalImage = new Image();
-playerverticalImage.src = 'images/climbright.png';
+playerverticalImage.src = 'climbright.png';
 
 const SPEED = 7;
 const SPEED_WHEN_CLIMBING = 2;
