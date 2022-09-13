@@ -164,9 +164,11 @@ const startLevel = (number: number): void => {
 const renderStartScreen = (lastText: string): void => {
   renderTexts(
     context,
-    'JS13kGames 2022 Entry                                     ',
+    '                    Ghost Mode                            ',
     '',
     'Jump on enemies to kill them and score points.            ',
+    'Get higher to score more points.                          ',
+    'Use death wisely.                                         ',
     '',
     'Controls                                                  ',
     'Use ARROWS or W/A/S/D to move. Jump with UP or W.         ',
