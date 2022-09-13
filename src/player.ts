@@ -29,6 +29,18 @@ import { Platform } from './elements';
 // @ts-ignore
 import { playTune, SFX_JUMP, SFX_END } from './music.js';
 
+const playerImage = new Image();
+playerImage.src = 'images/stand.png';
+
+const playerLeftfootImage = new Image();
+playerLeftfootImage.src = 'images/walk.png';
+
+const playerverticalLeftfootImage = new Image();
+playerverticalLeftfootImage.src = 'images/climb.png';
+
+const playerverticalImage = new Image();
+playerverticalImage.src = 'images/climbright.png';
+
 const SPEED = 7;
 const SPEED_WHEN_CLIMBING = 2;
 const JUMP_VELOCITY = -20;
@@ -39,7 +51,7 @@ const OFF_LEDGE_JUMP_DELAY_MS = 200;
 
 const GRAVITY = 1;
 
-const STANDING_WIDTH = 30;
+const STANDING_WIDTH = 60;
 const STANDING_HEIGHT = 90;
 
 interface LadderCollision {
@@ -55,7 +67,7 @@ enum State {
   Dead,
 }
 
-const playerImageWidth = 30;
+const playerImageWidth = 60;
 const playerImageHeight = 90;
 
 export class Player extends GameObjectClass {
@@ -119,9 +131,9 @@ export class Player extends GameObjectClass {
       context.rotate(-Math.PI / 2);
     } else if (this.state === State.Climbing) {
       if (this.moveLeftFoot < 5) {
-        // this.image = playerverticalImage;
+        this.image = playerverticalLeftfootImage;
       } else {
-        // this.image = playerverticalLeftfootImage;
+        this.image = playerverticalImage;
       }
     } else {
       if (this.moveLeft) {
@@ -130,9 +142,9 @@ export class Player extends GameObjectClass {
         context.translate(-playerImageWidth / 2, 0);
       }
       if (this.moveLeftFoot < this.walkingSpeed) {
-        // this.image = playerImage;
+        this.image = playerImage;
       } else {
-        // this.image = playerLeftfootImage;
+        this.image = playerLeftfootImage;
       }
     }
     if (this.moveLeftFoot > this.walkingSpeed * 2) this.moveLeftFoot = 0;
@@ -142,10 +154,10 @@ export class Player extends GameObjectClass {
       STANDING_WIDTH / playerImageWidth,
       STANDING_HEIGHT / playerImageHeight,
     );
-    // context.drawImage(this.image, 0, 0);
-    context.fillStyle = 'orange';
-    context.fillRect(0, 0, playerImageWidth, 20);
-    context.fillRect(0, 24, playerImageWidth, playerImageHeight - 24);
+    context.drawImage(this.image, 0, 0);
+    // context.fillStyle = 'orange';
+    // context.fillRect(0, 0, playerImageWidth, 20);
+    // context.fillRect(0, 24, playerImageWidth, playerImageHeight - 24);
 
     context.restore();
   }
