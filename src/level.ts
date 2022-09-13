@@ -37,11 +37,11 @@ const GHOST_APPEAR_TIME = 1000;
 const TIME_AS_GHOST = 6000;
 
 const ENEMY_WAWE_INTERVAL = 10000;
-const ENEMY_WAWE_SIZE = 4;
+const ENEMY_WAWE_SIZE = 5;
 
 function collidesFromAbove(player: Player, enemy: Enemy): boolean {
   const playerBottomY = player.y + player.height;
-  const isAbove = playerBottomY - 20 < enemy.y;
+  const isAbove = playerBottomY - 30 < enemy.y;
   return isAbove;
 }
 
@@ -390,7 +390,10 @@ export class Level implements Area {
         }
 
         if (collides(this.player, enemy)) {
-          if (collidesFromAbove(this.player, enemy)) {
+          if (
+            collidesFromAbove(this.player, enemy) ||
+            this.player.hasJustDropped()
+          ) {
             enemy.die();
             this.score += this.getMultiplier();
           } else {

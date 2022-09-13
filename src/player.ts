@@ -49,6 +49,8 @@ const DEADLY_FALLING_SPEED = 40;
 
 const OFF_LEDGE_JUMP_DELAY_MS = 200;
 
+const DROP_IMMUNITY_DELAY = 400;
+
 const GRAVITY = 1;
 
 const STANDING_WIDTH = 60;
@@ -75,6 +77,7 @@ export class Player extends GameObjectClass {
   public yVel = 0; // Vertical velocity, affected by jumping and gravity
 
   private latestOnPlatformTime = 0;
+  private dropStartTime: number | undefined;
   private state: State = State.OnPlatform;
   private fallingToGround = false;
   private stopClimbing = false;
@@ -119,6 +122,13 @@ export class Player extends GameObjectClass {
       this.fallingToGround = false;
       this.stopClimbing = false;
     }
+  }
+
+  hasJustDropped(): boolean {
+    return (
+      this.dropStartTime != null &&
+      performance.now() - this.dropStartTime < DROP_IMMUNITY_DELAY
+    );
   }
 
   draw(): void {
@@ -211,6 +221,13 @@ export class Player extends GameObjectClass {
       }
 
       return;
+    }
+
+    if (
+      this.dropStartTime != null &&
+      now - this.dropStartTime >= DROP_IMMUNITY_DELAY
+    ) {
+      this.dropStartTime = undefined;
     }
 
     const platform = this.findPlatform(platforms);
