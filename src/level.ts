@@ -33,14 +33,15 @@ import { Ghost } from './ghost';
 
 const ROOM_HEIGHT = 300;
 
-const TIME_AS_GHOST = 5000;
+const GHOST_APPEAR_TIME = 1000;
+const TIME_AS_GHOST = 6000;
 
 const ENEMY_WAWE_INTERVAL = 10000;
-const ENEMY_WAWE_SIZE = 4;
+const ENEMY_WAWE_SIZE = 5;
 
 function collidesFromAbove(player: Player, enemy: Enemy): boolean {
-  const playerCenterY = player.y + player.height / 2;
-  const isAbove = playerCenterY < enemy.y;
+  const playerBottomY = player.y + player.height;
+  const isAbove = playerBottomY - 30 < enemy.y;
   return isAbove;
 }
 
@@ -53,18 +54,19 @@ export class Level implements Area {
   public left = 0;
   public top = 0;
   public width = 2400;
-  public height = 2700;
+  public height = 3300;
 
   public score = 0;
-  public lives = 3;
+  public lives = 5;
 
   public isFinished = false;
 
   public camera: Camera | undefined;
 
   public player: Player = new Player(this);
-
   private ghost: Ghost | undefined;
+
+  private playerDeathTime: number | undefined;
 
   private enemies: Array<Enemy> = [];
   private enemyWaweCount = 0;
@@ -112,10 +114,13 @@ export class Level implements Area {
       return 8;
     }
     if (this.player.y > this.height - 9 * ROOM_HEIGHT) {
-      return 9;
+      return 10;
+    }
+    if (this.player.y > this.height - 10 * ROOM_HEIGHT) {
+      return 12;
     }
 
-    return 10;
+    return 20;
   }
 
   isOver(): boolean {
@@ -136,18 +141,7 @@ export class Level implements Area {
 
       this.player.died = (): void => {
         this.lives--;
-
-        if (this.lives > 0) {
-          const ghost = new Ghost(this);
-          ghost.x = this.player.x;
-          ghost.y = this.player.y;
-          this.ghost = ghost;
-          if (this.camera) {
-            this.camera.follow(this.ghost);
-          }
-        } else {
-          this.ghost = undefined;
-        }
+        this.playerDeathTime = performance.now();
       };
     }
   }
@@ -354,6 +348,25 @@ export class Level implements Area {
 
     this.player.customUpdate(this.ladders, this.platforms, camera);
 
+    if (
+      this.playerDeathTime != null &&
+      now - this.playerDeathTime > GHOST_APPEAR_TIME
+    ) {
+      this.playerDeathTime = undefined;
+
+      if (this.lives > 0) {
+        const ghost = new Ghost(this);
+        ghost.x = this.player.x + 30;
+        ghost.y = this.player.y - 50;
+        this.ghost = ghost;
+        if (this.camera) {
+          this.camera.follow(this.ghost);
+        }
+      } else {
+        this.ghost = undefined;
+      }
+    }
+
     if (this.ghost) {
       this.ghost.update();
 
@@ -377,7 +390,10 @@ export class Level implements Area {
         }
 
         if (collides(this.player, enemy)) {
-          if (collidesFromAbove(this.player, enemy)) {
+          if (
+            collidesFromAbove(this.player, enemy) ||
+            this.player.hasJustDropped()
+          ) {
             enemy.die();
             this.score += this.getMultiplier();
           } else {

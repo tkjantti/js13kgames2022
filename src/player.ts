@@ -30,16 +30,16 @@ import { Platform } from './elements';
 import { playTune, SFX_JUMP, SFX_END } from './music.js';
 
 const playerImage = new Image();
-playerImage.src = 'images/stand.png';
+playerImage.src = 'stand.png';
 
 const playerLeftfootImage = new Image();
-playerLeftfootImage.src = 'images/walk.png';
+playerLeftfootImage.src = 'walk.png';
 
 const playerverticalLeftfootImage = new Image();
-playerverticalLeftfootImage.src = 'images/climb.png';
+playerverticalLeftfootImage.src = 'climb.png';
 
 const playerverticalImage = new Image();
-playerverticalImage.src = 'images/climbright.png';
+playerverticalImage.src = 'climbright.png';
 
 const SPEED = 7;
 const SPEED_WHEN_CLIMBING = 2;
@@ -48,6 +48,8 @@ const CLIMB_SPEED = 6;
 const DEADLY_FALLING_SPEED = 40;
 
 const OFF_LEDGE_JUMP_DELAY_MS = 200;
+
+const DROP_IMMUNITY_DELAY = 400;
 
 const GRAVITY = 1;
 
@@ -75,6 +77,7 @@ export class Player extends GameObjectClass {
   public yVel = 0; // Vertical velocity, affected by jumping and gravity
 
   private latestOnPlatformTime = 0;
+  private dropStartTime: number | undefined;
   private state: State = State.OnPlatform;
   private fallingToGround = false;
   private stopClimbing = false;
@@ -119,6 +122,13 @@ export class Player extends GameObjectClass {
       this.fallingToGround = false;
       this.stopClimbing = false;
     }
+  }
+
+  hasJustDropped(): boolean {
+    return (
+      this.dropStartTime != null &&
+      performance.now() - this.dropStartTime < DROP_IMMUNITY_DELAY
+    );
   }
 
   draw(): void {
@@ -193,16 +203,32 @@ export class Player extends GameObjectClass {
     platforms: Array<Platform>,
     camera: Camera,
   ): void {
+    const now = performance.now();
+
     if (this.state === State.Dead) {
-      // Fall down
-      if (this.y + this.height < this.level.height) {
+      const platform = this.findPlatform(platforms);
+      if (platform) {
+        this.latestOnPlatformTime = now;
+      }
+
+      if (platform) {
+        this.y = platform.y - this.height;
+        this.yVel = 0;
+      } else if (this.y + this.height < this.level.height) {
+        // Fall down
         this.yVel += GRAVITY;
         this.y += this.yVel;
       }
+
       return;
     }
 
-    const now = performance.now();
+    if (
+      this.dropStartTime != null &&
+      now - this.dropStartTime >= DROP_IMMUNITY_DELAY
+    ) {
+      this.dropStartTime = undefined;
+    }
 
     const platform = this.findPlatform(platforms);
     if (platform) {

@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --config webpack.dev.js",
     "prebuild": "npm run lint",
     "bundle": "webpack --config webpack.prod.js",
-    "copy": "cp src/favicon.ico dist/",
+    "copy": "cp src/*.png dist/ && cp src/favicon.ico dist/",
     "build": "npm run bundle && npm run copy",
     "postbuild": "node postbuild.js",
     "lint": "prettier --check \"src/**/*.ts\" && eslint 'src/**/*.ts' --fix --max-warnings 0"

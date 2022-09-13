@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Tero Jäntti, Sami H
+ * Copyright (c) 2022 Tero Jäntti, Sami H
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
