@@ -24,7 +24,7 @@
 
 import { Ladder, Platform } from './elements';
 import { Camera } from './camera';
-import { collides, Sprite, Vector } from 'kontra';
+import { collides, GameObject, Sprite, Vector } from 'kontra';
 import { Player } from './player';
 import { Enemy } from './enemy';
 import { random, randomMinMax } from './utils';
@@ -89,34 +89,36 @@ export class Level implements Area {
   }
 
   getMultiplier(): number {
-    if (this.player.y > this.height - 1 * ROOM_HEIGHT) {
+    const o: GameObject = this.ghost ? this.ghost : this.player;
+
+    if (o.y > this.height - 1 * ROOM_HEIGHT) {
       return 1;
     }
-    if (this.player.y > this.height - 2 * ROOM_HEIGHT) {
+    if (o.y > this.height - 2 * ROOM_HEIGHT) {
       return 2;
     }
-    if (this.player.y > this.height - 3 * ROOM_HEIGHT) {
+    if (o.y > this.height - 3 * ROOM_HEIGHT) {
       return 3;
     }
-    if (this.player.y > this.height - 4 * ROOM_HEIGHT) {
+    if (o.y > this.height - 4 * ROOM_HEIGHT) {
       return 4;
     }
-    if (this.player.y > this.height - 5 * ROOM_HEIGHT) {
+    if (o.y > this.height - 5 * ROOM_HEIGHT) {
       return 5;
     }
-    if (this.player.y > this.height - 6 * ROOM_HEIGHT) {
+    if (o.y > this.height - 6 * ROOM_HEIGHT) {
       return 6;
     }
-    if (this.player.y > this.height - 7 * ROOM_HEIGHT) {
+    if (o.y > this.height - 7 * ROOM_HEIGHT) {
       return 7;
     }
-    if (this.player.y > this.height - 8 * ROOM_HEIGHT) {
+    if (o.y > this.height - 8 * ROOM_HEIGHT) {
       return 8;
     }
-    if (this.player.y > this.height - 9 * ROOM_HEIGHT) {
+    if (o.y > this.height - 9 * ROOM_HEIGHT) {
       return 10;
     }
-    if (this.player.y > this.height - 10 * ROOM_HEIGHT) {
+    if (o.y > this.height - 10 * ROOM_HEIGHT) {
       return 12;
     }
 
