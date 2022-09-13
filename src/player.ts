@@ -193,16 +193,25 @@ export class Player extends GameObjectClass {
     platforms: Array<Platform>,
     camera: Camera,
   ): void {
+    const now = performance.now();
+
     if (this.state === State.Dead) {
-      // Fall down
-      if (this.y + this.height < this.level.height) {
+      const platform = this.findPlatform(platforms);
+      if (platform) {
+        this.latestOnPlatformTime = now;
+      }
+
+      if (platform) {
+        this.y = platform.y - this.height;
+        this.yVel = 0;
+      } else if (this.y + this.height < this.level.height) {
+        // Fall down
         this.yVel += GRAVITY;
         this.y += this.yVel;
       }
+
       return;
     }
-
-    const now = performance.now();
 
     const platform = this.findPlatform(platforms);
     if (platform) {
