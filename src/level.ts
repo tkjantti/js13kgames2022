@@ -40,8 +40,8 @@ const ENEMY_WAWE_INTERVAL = 10000;
 const ENEMY_WAWE_SIZE = 4;
 
 function collidesFromAbove(player: Player, enemy: Enemy): boolean {
-  const playerCenterY = player.y + player.height / 2;
-  const isAbove = playerCenterY < enemy.y;
+  const playerBottomY = player.y + player.height;
+  const isAbove = playerBottomY - 20 < enemy.y;
   return isAbove;
 }
 
