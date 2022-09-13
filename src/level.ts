@@ -33,6 +33,7 @@ import { Ghost } from './ghost';
 
 const ROOM_HEIGHT = 300;
 
+const GHOST_APPEAR_TIME = 1000;
 const TIME_AS_GHOST = 5000;
 
 const ENEMY_WAWE_INTERVAL = 10000;
@@ -63,8 +64,9 @@ export class Level implements Area {
   public camera: Camera | undefined;
 
   public player: Player = new Player(this);
-
   private ghost: Ghost | undefined;
+
+  private playerDeathTime: number | undefined;
 
   private enemies: Array<Enemy> = [];
   private enemyWaweCount = 0;
@@ -136,18 +138,7 @@ export class Level implements Area {
 
       this.player.died = (): void => {
         this.lives--;
-
-        if (this.lives > 0) {
-          const ghost = new Ghost(this);
-          ghost.x = this.player.x;
-          ghost.y = this.player.y;
-          this.ghost = ghost;
-          if (this.camera) {
-            this.camera.follow(this.ghost);
-          }
-        } else {
-          this.ghost = undefined;
-        }
+        this.playerDeathTime = performance.now();
       };
     }
   }
@@ -353,6 +344,25 @@ export class Level implements Area {
     }
 
     this.player.customUpdate(this.ladders, this.platforms, camera);
+
+    if (
+      this.playerDeathTime != null &&
+      now - this.playerDeathTime > GHOST_APPEAR_TIME
+    ) {
+      this.playerDeathTime = undefined;
+
+      if (this.lives > 0) {
+        const ghost = new Ghost(this);
+        ghost.x = this.player.x + 30;
+        ghost.y = this.player.y - 50;
+        this.ghost = ghost;
+        if (this.camera) {
+          this.camera.follow(this.ghost);
+        }
+      } else {
+        this.ghost = undefined;
+      }
+    }
 
     if (this.ghost) {
       this.ghost.update();
